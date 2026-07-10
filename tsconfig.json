@@ -4,8 +4,13 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ], 
-  "paths": {
-    "@core/*" : ["Core/*"],
-    "@components/*" : ["Components/*"]
-  }
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@cpu/*": ["cpu/*"],
+      "@sim/*": ["simulator/*"],
+      "@components/*": ["components/*"]
+    },
+    "ignoreDeprecations": "6.0"
+  }  
 }
