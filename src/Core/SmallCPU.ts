@@ -96,63 +96,6 @@ export interface Data {
 export type InstructionMemory = Instruction[];
 export type DataMemory = Data[];
 
-export class SmallCPU {
-  registerFile: Record<RegisterName, BaseData>;
-  dataMemory: DataMemory;
-  instructionMemory: InstructionMemory;
-  pc: UnsignedData;
-  ri: Instruction;
-  
-  constructor() {
-    this.registerFile = {
-      RA: new SignedData(0, 8),
-      RB: new SignedData(0, 8),
-      RC: new SignedData(0, 8),
-      RX: new SignedData(0, 8),
-    };
-
-    this.pc = new UnsignedData(0, 8);
-    this.ri = {
-      pcIsHere: false,
-      address: -1,
-      assembly: "",
-      bin: "",
-      dec: 0,
-      hex: "",
-      fields: {
-        inst: ""
-      }
-    }
-
-    this.instructionMemory = Array.from({ length: 256 }, (_, address) => ({
-      pcIsHere: false,
-      address,
-      assembly: "",
-      bin: "",
-      dec: 0,
-      hex: "",
-      fields: {
-        inst: ""
-      }
-    }));
-
-    this.dataMemory = Array.from({ length: 256 }, (_, address) => ({
-      address,
-      data: new SignedData(0, 8)
-    }));
-  }
-
-  updateInstruction(address: number, instruction: Instruction): void {
-    if(address >= 0 && address < 256) {
-      this.instructionMemory[address] = instruction;
-    }
-    else {
-      throw new Error(`Endereço inválido: ${address}`);
-    }
-  }
-
-}
-
 const INSTRUCTION_VALIDATION: Record<string, RegExp> = {
   ALL_MODES_REG_PATTERN : /^(LDR|ADD|SUB)\s+(RA|RB|RC|RX)\s+(#?-?\d+)(?:,(RX))?$/i,
   STR_PATTERN : /^(STR)\s+(RA|RB|RC|RX)\s+(\d+)(?:,(RX))?$/i,
@@ -241,7 +184,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
 
   let pattern = isValidAssembly(assembly);
   if(pattern === "INVALID_PATTERN") 
-    throw new Error("Instrução não é válida!");
+    throw new Error("Invalid instruction!");
   
   const match = assembly.match(INSTRUCTION_VALIDATION[pattern]);
 
@@ -351,3 +294,107 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
 
 
 export {isValidAssembly, parseAssembly};
+
+
+export class SmallCPU {
+  registerFile!: Record<RegisterName, BaseData>;
+  dataMemory!: DataMemory;
+  instructionMemory!: InstructionMemory;
+  pc!: UnsignedData;
+  ri!: Instruction;
+  
+  constructor() {
+    this.resetMemories();
+    this.resetRegisters();
+  }
+
+  resetMemories() {
+    this.instructionMemory = Array.from({ length: 256 }, (_, address) => ({
+      pcIsHere: false,
+      address,
+      assembly: "",
+      bin: "",
+      dec: 0,
+      hex: "",
+      fields: {
+        inst: ""
+      }
+    }));
+
+    this.dataMemory = Array.from({ length: 256 }, (_, address) => ({
+      address,
+      data: new SignedData(0, 8)
+    }));
+  }
+
+  resetRegisters() {
+    this.registerFile = {
+      RA: new SignedData(0, 8),
+      RB: new SignedData(0, 8),
+      RC: new SignedData(0, 8),
+      RX: new SignedData(0, 8),
+    };
+
+    this.pc = new UnsignedData(0, 8);
+    this.ri = {
+      pcIsHere: false,
+      address: -1,
+      assembly: "",
+      bin: "",
+      dec: 0,
+      hex: "",
+      fields: {
+        inst: ""
+      }
+    }
+
+    this.updatePcIsHere();
+  }
+
+  updatePcIsHere() {
+    for (let i = 0; i < this.instructionMemory.length; i++) {
+      this.instructionMemory[i].pcIsHere = (i === this.pc.content);
+    }
+  }
+
+  updateInstruction(address: number, instruction: Instruction): void {
+    if(address >= 0 && address < 256) {
+      this.instructionMemory[address] = instruction;
+    }
+    else {
+      throw new Error(`Endereço inválido: ${address}`);
+    }
+  }
+
+  updateAssembly(address: number, assembly: string): void {
+    if(isValidAssembly(assembly) === "INVALID_PATTERN")
+      throw new Error("Invalid instruction!");
+
+    const instruction = parseAssembly(address, assembly);
+
+    if(address >= 0 && address < 256) {
+      this.instructionMemory[address] = instruction;
+    }
+    else {
+      throw new Error(`Endereço inválido: ${address}`);
+    }
+  }
+
+  updateData(address: number, data: number): void {
+    if(address >= 0 && address < 256) {
+      this.dataMemory[address] = {
+        address: address,
+        data: new SignedData(data, 8)
+      }
+    }
+    else {
+      throw new Error(`Endereço inválido: ${address}`);
+    }
+  }
+
+  step() {
+    this.ri = this.instructionMemory[this.pc.content];
+    console.log(`[DBG] Executing instruction: ${this.ri.assembly}`);
+    this.pc.add(1);
+  }
+}

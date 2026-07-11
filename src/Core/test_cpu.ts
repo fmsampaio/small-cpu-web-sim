@@ -1,9 +1,9 @@
-import {UnsignedData, SignedData, SmallCPU, isValidAssembly, parseAssembly} from "./SmallCPU.ts"
+import {UnsignedData, SignedData, SmallCPU, isValidAssembly} from "./SmallCPU.ts"
 
 function mainTest() {
     // testAssemblyParsing();
     // testDataFormats();
-    testSmallCpuExecution();
+    program1();
 }
 
 function testDataFormats() {
@@ -36,18 +36,24 @@ function testAssemblyParsing() {
     console.log(isValidAssembly("LDR RT 0"));
 }
 
-function testSmallCpuExecution() {
+function program1() {
     const cpu = new SmallCPU();
 
-    cpu.updateInstruction(0, parseAssembly(0, "LDR RA 0"));
-    cpu.updateInstruction(1, parseAssembly(1, "STR RA 15"));
-    cpu.updateInstruction(2, parseAssembly(2, "ADD RX #1"));
-    cpu.updateInstruction(3, parseAssembly(3, "ADD RB 10,RX"));
-    cpu.updateInstruction(4, parseAssembly(4, "JC N 15"));
-    cpu.updateInstruction(5, parseAssembly(5, "JMP 100"));
-    cpu.updateInstruction(6, parseAssembly(6, "HLT"));
+    cpu.updateAssembly(0, "LDR RA 0");
+    cpu.updateAssembly(1, "ADD RA 1");
+    cpu.updateAssembly(2, "STR RA 2");
+    cpu.updateAssembly(3, "HLT");
 
-    console.log(cpu.instructionMemory)
+    cpu.updateData(0, 10);
+    cpu.updateData(1, 20);
+
+    cpu.step();
+    cpu.step();
+    cpu.step();
+    cpu.step();
+
+    // console.log(cpu.instructionMemory);
+    // console.log(cpu.dataMemory);    
 }
 
 mainTest()
