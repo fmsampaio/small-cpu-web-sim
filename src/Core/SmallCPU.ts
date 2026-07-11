@@ -1,4 +1,8 @@
+
+export type Mnemonic = "LDR" | "STR" | "ADD" | "SUB" | "JMP" | "JC" | "HLT" | "NULL";
 export type RegisterName = "RA" | "RB" | "RC" | "RX";
+export type ConditionCodeName = "Z" | "N";
+export type AddressMode = "DIR" | "IMM" | "IDX";
 
 export abstract class BaseData {
   content: number;
@@ -18,6 +22,20 @@ export abstract class BaseData {
   // métodos que cada classe filha deve implementar
   protected abstract computeMinValue(): number;
   protected abstract computeMaxValue(): number;
+
+  assign(value: number) {
+    if(value > this.maxValue) {
+      const diff = value - this.maxValue;
+      this.content = this.minValue + diff;
+    }
+    else if(value < this.maxValue) {
+      const diff = this.maxValue - value;
+      this.content = this.maxValue - diff;
+    }
+    else {
+      this.content = value;
+    }
+  }
 
   add(value: number) {
     const partialSum = this.content + value;
@@ -39,10 +57,6 @@ export abstract class BaseData {
     } else {
       this.content = partialSub;
     }
-  }
-
-  getContentDec() {
-    return this.content;
   }
 
   getContentHex() {
@@ -71,11 +85,11 @@ export class SignedData extends BaseData {
 }
 
 export interface InstructionFields {
-  inst: string;
-  reg?: string;
-  cc?: string;
+  inst: Mnemonic;
+  reg?: RegisterName;
+  cc?: ConditionCodeName;
   mem?: number;
-  mode?: string;
+  mode?: AddressMode;
 }
 
 export interface Instruction {
@@ -104,29 +118,30 @@ const INSTRUCTION_VALIDATION: Record<string, RegExp> = {
   HLT_PATTERN : /^HLT$/i
 }
 
-const INST_TO_OPCODE: Record<string, string> = {
+const INST_TO_OPCODE: Record<Mnemonic, string> = {
   LDR : "001",
   STR : "010",
   ADD : "011",
   SUB : "100",
   JMP : "101",
   JC  : "110",
-  HLT : "111"
+  HLT : "111",
+  NULL : "XXX"
 }
 
-const REG_TO_BIN: Record<string, string> = {
+const REG_TO_BIN: Record<RegisterName, string> = {
   RA : "00",
   RB : "01",
   RC : "10",
   RX : "11"
 }
 
-const CC_TO_BIN: Record<string, string> = {
+const CC_TO_BIN: Record<ConditionCodeName, string> = {
   Z : "0",
   N : "1"
 }
 
-const MODE_TO_BIN: Record<string, string> = {
+const MODE_TO_BIN: Record<AddressMode, string> = {
   DIR : "00",
   IMM : "01",
   IDX : "10"
@@ -188,13 +203,13 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
   
   const match = assembly.match(INSTRUCTION_VALIDATION[pattern]);
 
-  const inst = match![(pattern === "HLT_PATTERN") ? 0 : 1];
+  const inst = match![(pattern === "HLT_PATTERN") ? 0 : 1] as Mnemonic;
   const opcode = INST_TO_OPCODE[inst];
 
   if(pattern === "ALL_MODES_REG_PATTERN" || pattern === "STR_PATTERN") {
-    const regStr = match![2];
+    const reg = match![2] as RegisterName;
     let memStr = match![3];
-    let modeStr = "DIR";
+    let modeStr = "DIR" as AddressMode;
 
     if(memStr.includes("#")) {
       memStr = memStr.slice(1);
@@ -206,7 +221,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
       modeStr = "IDX";
 
     const modeBin = MODE_TO_BIN[modeStr];
-    const regBin = REG_TO_BIN[regStr];
+    const regBin = REG_TO_BIN[reg];
     const memBin = memValue.toString(2).padStart(8, "0");
 
     const bin = `${opcode}${regBin}0${modeBin}${memBin}`;
@@ -221,8 +236,8 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
       dec: dec,
       hex: hex,
       fields: {
-        inst: inst,
-        reg:    regStr,
+        inst:   inst,
+        reg:    reg,
         mem:    memValue,
         mode:   modeStr
       }
@@ -298,12 +313,15 @@ export {isValidAssembly, parseAssembly};
 
 export class SmallCPU {
   registerFile!: Record<RegisterName, BaseData>;
+  ccFile!: Record<ConditionCodeName, boolean>;
   dataMemory!: DataMemory;
   instructionMemory!: InstructionMemory;
   pc!: UnsignedData;
   ri!: Instruction;
+  isHltReached: boolean;
   
   constructor() {
+    this.isHltReached = false;
     this.resetMemories();
     this.resetRegisters();
   }
@@ -317,7 +335,7 @@ export class SmallCPU {
       dec: 0,
       hex: "",
       fields: {
-        inst: ""
+        inst: "NULL"
       }
     }));
 
@@ -334,6 +352,11 @@ export class SmallCPU {
       RC: new SignedData(0, 8),
       RX: new SignedData(0, 8),
     };
+
+    this.ccFile = {
+      Z : false,
+      N : false
+    }
 
     this.pc = new UnsignedData(0, 8);
     this.ri = {
@@ -392,9 +415,91 @@ export class SmallCPU {
     }
   }
 
+  updateConditionCodes(value: number) {
+    this.ccFile.Z = (value == 0);
+    this.ccFile.N = (value < 0);
+  }
+
   step() {
     this.ri = this.instructionMemory[this.pc.content];
-    console.log(`[DBG] Executing instruction: ${this.ri.assembly}`);
+    console.log(`[DBG] Executing instruction: [${this.pc.content}] ${this.ri.assembly}`);
     this.pc.add(1);
+
+    if(this.ri.fields.inst === "LDR") {
+      const targetReg = this.ri.fields.reg!;
+      const addressMode = this.ri.fields.mode;
+      const memField = this.ri.fields.mem!;
+
+      const dataToBeLoaded =  (addressMode === "DIR") ? this.dataMemory[memField].data.content :
+                              (addressMode === "IMM") ? memField :
+                            /*(addressMode === "IDX")*/ this.dataMemory[memField + this.registerFile.RX.content].data.content;
+
+      this.registerFile[targetReg].assign(dataToBeLoaded);
+
+      this.updateConditionCodes(this.registerFile[targetReg].content);
+    }
+    else if(this.ri.fields.inst === "STR") {
+      const targetReg = this.ri.fields.reg!;
+      const addressMode = this.ri.fields.mode;
+      const memField = this.ri.fields.mem!;
+
+      const dataToBeStored = this.registerFile[targetReg].content;
+      const addressToBeStored = (addressMode === "DIR") ? memField :
+                              /*(addressMode === "IDX")*/ memField + this.registerFile.RX.content;
+      
+      this.dataMemory[addressToBeStored].data.assign(dataToBeStored);
+    }
+    else if(this.ri.fields.inst === "ADD" || this.ri.fields.inst === "SUB") {
+      const targetReg = this.ri.fields.reg!;
+      const addressMode = this.ri.fields.mode;
+      const memField = this.ri.fields.mem!;
+
+      const operand =  (addressMode === "DIR") ? this.dataMemory[memField].data.content :
+                              (addressMode === "IMM") ? memField :
+                            /*(addressMode === "IDX")*/ this.dataMemory[memField + this.registerFile.RX.content].data.content;
+
+      if(this.ri.fields.inst === "ADD") {
+        this.registerFile[targetReg].add(operand);
+      }
+      else { //this.ri.fields.inst === "ADD"
+        this.registerFile[targetReg].sub(operand);
+      }
+
+      this.updateConditionCodes(this.registerFile[targetReg].content)
+
+    }
+    else if(this.ri.fields.inst === "JMP") {
+      const memField = this.ri.fields.mem!;
+      this.pc.assign(memField);
+    }
+    else if(this.ri.fields.inst === "JC") {
+      const ccField = this.ri.fields.cc!;
+      const memField = this.ri.fields.mem!;
+
+      if(this.ccFile[ccField]) {
+        this.pc.assign(memField);
+      }      
+    }
+    else if(this.ri.fields.inst === "HLT") {
+      this.isHltReached = true;
+    }
+  }
+
+  logSummary(numOfMemPositions: number) {
+    console.log("Instruction Memory:")
+    for (let address = 0; address < numOfMemPositions; address++) {
+        console.log(`${address}: ${this.instructionMemory[address].assembly}`)
+    }
+    console.log("Data Memory:")
+    for (let address = 0; address < numOfMemPositions; address++) {
+        console.log(`${address}: ${this.dataMemory[address].data.content}`)
+    }
+    console.log("Registers:")
+    console.log(`RA: ${this.registerFile.RA.content}`)
+    console.log(`RB: ${this.registerFile.RB.content}`)
+    console.log(`RC: ${this.registerFile.RC.content}`)
+    console.log(`RX: ${this.registerFile.RX.content}`)
+    console.log(`RZ: ${this.ccFile.Z}`)
+    console.log(`RN: ${this.ccFile.N}`)
   }
 }

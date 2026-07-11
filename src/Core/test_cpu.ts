@@ -39,21 +39,25 @@ function testAssemblyParsing() {
 function program1() {
     const cpu = new SmallCPU();
 
-    cpu.updateAssembly(0, "LDR RA 0");
-    cpu.updateAssembly(1, "ADD RA 1");
-    cpu.updateAssembly(2, "STR RA 2");
-    cpu.updateAssembly(3, "HLT");
+    const asmCode = [
+        "LDR RA 0",
+        "SUB RA 1",
+        "STR RA 2",
+        "HLT"
+    ]
+
+    for (let address = 0; address < asmCode.length; address++) {
+        cpu.updateAssembly(address, asmCode[address]);        
+    }
 
     cpu.updateData(0, 10);
     cpu.updateData(1, 20);
 
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
+    for (let address = 0; address < asmCode.length; address++) {
+        cpu.step();
+        cpu.logSummary(6);
+    }
 
-    // console.log(cpu.instructionMemory);
-    // console.log(cpu.dataMemory);    
 }
 
 mainTest()
