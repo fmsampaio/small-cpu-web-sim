@@ -40,9 +40,16 @@ function program1() {
     const cpu = new SmallCPU();
 
     const asmCode = [
-        "LDR RA 0",
-        "SUB RA 1",
-        "STR RA 2",
+        "LDR RA #0",
+        "LDR RX #0",
+        "LDR RB #5",
+
+        "JC Z 8",
+        "ADD RA 2,RX",
+        "ADD RX #1",
+        "SUB RB #1",
+        "JMP 3",
+        "STR RA 0",
         "HLT"
     ]
 
@@ -50,12 +57,15 @@ function program1() {
         cpu.updateAssembly(address, asmCode[address]);        
     }
 
-    cpu.updateData(0, 10);
-    cpu.updateData(1, 20);
+    cpu.updateData(2, 1);
+    cpu.updateData(3, 2);
+    cpu.updateData(4, 3);
+    cpu.updateData(5, 4);
+    cpu.updateData(6, 5);
 
-    for (let address = 0; address < asmCode.length; address++) {
+    while(! cpu.isHltReached) {
         cpu.step();
-        cpu.logSummary(6);
+        cpu.logSummary(8);
     }
 
 }
