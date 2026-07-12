@@ -63,10 +63,9 @@ function program1() {
     cpu.updateData(5, 4);
     cpu.updateData(6, 5);
 
-    while(! cpu.isHltReached) {
-        cpu.step();
-        cpu.logSummary(8);
-    }
+    cpu.run();
+
+    cpu.logSummary(8);
 
 }
 

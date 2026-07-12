@@ -502,4 +502,10 @@ export class SmallCPU {
     console.log(`RZ: ${this.ccFile.Z}`)
     console.log(`RN: ${this.ccFile.N}`)
   }
+
+  run() {
+    while(! this.isHltReached) {
+      this.step();
+    }
+  }
 }
