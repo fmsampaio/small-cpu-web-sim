@@ -110,6 +110,8 @@ export interface Data {
 export type InstructionMemory = Instruction[];
 export type DataMemory = Data[];
 
+const TIMEOUT_EXPIRATION = 1000;
+
 const INSTRUCTION_VALIDATION: Record<string, RegExp> = {
   ALL_MODES_REG_PATTERN : /^(LDR|ADD|SUB)\s+(RA|RB|RC|RX)\s+(#?-?\d+)(?:,(RX))?$/i,
   STR_PATTERN : /^(STR)\s+(RA|RB|RC|RX)\s+(\d+)(?:,(RX))?$/i,
@@ -319,9 +321,11 @@ export class SmallCPU {
   pc!: UnsignedData;
   ri!: Instruction;
   isHltReached: boolean;
+  isTimeoutReached: boolean;
   
   constructor() {
     this.isHltReached = false;
+    this.isTimeoutReached = false;
     this.resetMemories();
     this.resetRegisters();
   }
@@ -504,8 +508,15 @@ export class SmallCPU {
   }
 
   run() {
-    while(! this.isHltReached) {
+    let executedInstructions = 0;
+    while(! this.isHltReached && ! this.isTimeoutReached) {
+      
       this.step();
+
+      executedInstructions += 1;
+      if(executedInstructions >= TIMEOUT_EXPIRATION) {
+        this.isTimeoutReached = true;
+      }
     }
   }
 }

@@ -47,7 +47,7 @@ function program1() {
         "JC Z 8",
         "ADD RA 2,RX",
         "ADD RX #1",
-        "SUB RB #1",
+        // "SUB RB #1",
         "JMP 3",
         "STR RA 0",
         "HLT"
@@ -66,6 +66,7 @@ function program1() {
     cpu.run();
 
     cpu.logSummary(8);
+    console.log(cpu.isTimeoutReached);
 
 }
 
