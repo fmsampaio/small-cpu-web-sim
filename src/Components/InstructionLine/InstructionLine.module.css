@@ -1,0 +1,41 @@
+.row {
+  display: grid;
+  grid-template-columns: 4rem minmax(16rem, 1fr) 5rem 3rem;
+  align-items: center;
+
+  min-height: 40px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: #f8f9fa;   /* Cinza muito claro */
+  border-bottom: 1px solid var(--color-border);
+}
+
+
+.address {
+  font-family: var(--font-monospace);
+  text-align: center;
+  font-weight: 600;
+}
+
+.assemblyInput {
+  max-width: 200px;
+  box-sizing: border-box;
+
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+
+  font-family: var(--font-monospace);
+}
+
+.machineCode {
+  font-family: var(--font-monospace);
+  text-align: center;
+}
+
+.currentInstruction {
+  background-color: var(--color-current-instruction);
+}
+
+.invalidInstruction .assemblyInput {
+  border-color: var(--color-error);
+}

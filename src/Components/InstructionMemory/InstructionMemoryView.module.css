@@ -1,0 +1,35 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 490px;
+  height: 60vh;
+  min-height: 350px;
+  max-height: 650px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+
+  overflow: hidden;
+}
+
+.header {
+    display: grid;
+    grid-template-columns:
+        70px
+        1fr
+        90px;
+    font-weight: bold;
+    background: #eeeeee;
+    border-bottom: 1px solid #bdbdbd;
+    padding: 8px;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex: 1;
+}

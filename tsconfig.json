@@ -7,9 +7,8 @@
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
-      "@cpu/*": ["cpu/*"],
-      "@sim/*": ["simulator/*"],
-      "@components/*": ["components/*"]
+      "@core/*": ["Core/*"],
+      "@components/*": ["Components/*"]
     },
     "ignoreDeprecations": "6.0"
   }  

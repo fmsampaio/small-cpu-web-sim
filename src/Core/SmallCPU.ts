@@ -309,8 +309,27 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
   
 }
 
+export interface StateSmallCPU {
+  registerFile : {
+    RA : number,
+    RB : number,
+    RC : number,
+    RX : number
+  },
+  ccFile : {
+    Z : boolean,
+    N : boolean
+  },
+  dataMemory : Data[],
+  instructionMemory : Instruction[],
+  pc : number,
+  ri : Instruction,
+  isHltReached : boolean,
+  isTimeoutReached : boolean 
+}
 
 export {isValidAssembly, parseAssembly};
+
 
 
 export class SmallCPU {
@@ -334,10 +353,10 @@ export class SmallCPU {
     this.instructionMemory = Array.from({ length: 256 }, (_, address) => ({
       pcIsHere: false,
       address,
-      assembly: "",
+      assembly: "XXXX",
       bin: "",
       dec: 0,
-      hex: "",
+      hex: "0x",
       fields: {
         inst: "NULL"
       }
@@ -384,12 +403,12 @@ export class SmallCPU {
     }
   }
 
-  updateInstruction(address: number, instruction: Instruction): void {
-    if(address >= 0 && address < 256) {
-      this.instructionMemory[address] = instruction;
+  updateInstruction(instruction: Instruction): void {
+    if(instruction.address >= 0 && instruction.address < 256) {
+      this.instructionMemory[instruction.address] = instruction;
     }
     else {
-      throw new Error(`Endereço inválido: ${address}`);
+      throw new Error(`Endereço inválido: ${instruction.address}`);
     }
   }
 
@@ -422,6 +441,27 @@ export class SmallCPU {
   updateConditionCodes(value: number) {
     this.ccFile.Z = (value == 0);
     this.ccFile.N = (value < 0);
+  }
+
+  exportState() : StateSmallCPU {
+    return {
+      registerFile : {
+        RA : this.registerFile.RA.content,
+        RB : this.registerFile.RB.content,
+        RC : this.registerFile.RC.content,
+        RX : this.registerFile.RX.content
+      },
+      ccFile : {
+        Z : this.ccFile.Z,
+        N : this.ccFile.N
+      },
+      dataMemory : this.dataMemory,
+      instructionMemory : this.instructionMemory,
+      pc : this.pc.content,
+      ri : this.ri,
+      isHltReached : this.isHltReached,
+      isTimeoutReached : this.isT 
+    }
   }
 
   step() {
@@ -519,4 +559,6 @@ export class SmallCPU {
       }
     }
   }
+
+
 }
