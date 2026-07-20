@@ -2,18 +2,12 @@
   display: grid;
   grid-template-columns: 3rem 4rem 7rem 4rem 3rem;
   align-items: center;
-
   min-height: 40px;
-  border-bottom: 1px solid var(--color-border);
-  background-color: #f8f9fa;   /* Cinza muito claro */
-  border-bottom: 1px solid var(--color-border);
 }
 
 
 .address {
-  font-family: var(--font-monospace);
   text-align: center;
-  font-weight: 600;
 }
 
 .assemblyInput {
@@ -23,9 +17,7 @@
 
   padding: 0.4rem 0.5rem;
   border: 1px solid;
-  border-radius: 4px;
 
-  font-family: var(--font-monospace);
   background-color: white;
 }
 
@@ -55,7 +47,7 @@
   font-size: 0.75rem;
   font-weight: 650;
 
-  border-radius: 999px;
+  border-radius: 5px;
 
   width: 2.2rem;
   height: 1.4rem;
