@@ -5,22 +5,20 @@ import { InstructionLine } from "../InstructionLine/InstructionLine";
 import styles from "./InstructionMemoryView.module.css"
 
 
-interface InstructionMemoryProps {
+interface InstructionMemoryViewProps {
     instructionMemory: InstructionMemory,
     handleInstructionMemoryUpdate : (updatedInstruction : Instruction) => void,
     handleInvalidInstructionMemoryUpdate : (address : number) => void,
 }
 
 export const InstructionMemoryView = memo( 
-  function InstructionMemory( {
+  function InstructionMemoryView( {
       instructionMemory, 
       handleInstructionMemoryUpdate,
       handleInvalidInstructionMemoryUpdate
-    } : InstructionMemoryProps ) {
+    } : InstructionMemoryViewProps ) {
 
-    const [instructions, setInstructions] = useState<InstructionMemory>(instructionMemory);
-
-    function handleInstructionUpdate(validation : string, address : number, updatedInstruction? : Instruction) {
+    function handleInstructionUpdate(validation : string, address : number, updatedInstruction? : Instruction) : void {
       if(validation === "INVALID_PATTERN") {
         console.log("Instrução inválida!")
         handleInvalidInstructionMemoryUpdate(address);
@@ -41,7 +39,7 @@ export const InstructionMemoryView = memo(
             <span>MODE</span>
         </div>
         <div className={styles.body}>
-          {instructions.map((instruction) => (
+          {instructionMemory.map((instruction) => (
             <InstructionLine
               key={instruction.address}
               instruction={instruction}

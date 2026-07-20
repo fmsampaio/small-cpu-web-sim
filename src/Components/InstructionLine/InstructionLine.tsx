@@ -14,10 +14,10 @@ export const InstructionLine = memo (
     } : InstructionLineProps) {
 
         const [invalid, setInvalid] = useState(false);
-        const [assemblyData, setAssemblyData] = useState("");
+        const [assemblyDataInput, setAssemblyDataInput] = useState("");
 
         function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
-            setAssemblyData(event.target.value);
+            setAssemblyDataInput(event.target.value);
         }
 
         function handleOnBlur(event: React.FocusEvent<HTMLInputElement>): void {
@@ -30,7 +30,7 @@ export const InstructionLine = memo (
                 console.log(newInst);
                 handleInstructionUpdate(validation, instruction.address, newInst);
                 setInvalid(false);
-                setAssemblyData(newInst.assembly);
+                setAssemblyDataInput(newInst.assembly);
             }
             catch(error) {
                 setInvalid(assemblyInput != "");
@@ -56,7 +56,7 @@ export const InstructionLine = memo (
                     data-memory-address={instruction.address}
                     className={`${styles.assemblyInput} ${invalid ? styles.invalidInput : styles.validInput}`}
                     type="text"
-                    value={assemblyData}
+                    value={assemblyDataInput}
                     onBlur={handleOnBlur}
                     onChange={handleOnChange}
                 />
