@@ -1,6 +1,6 @@
 .row {
   display: grid;
-  grid-template-columns: 3rem 4rem;
+  grid-template-columns: 4rem 4rem;
   align-items: center;
   min-height: 40px;
 }
@@ -12,4 +12,6 @@
 
   padding: 0.4rem 0.5rem;
   border: 1px solid;
+
+  background-color: white;
 }

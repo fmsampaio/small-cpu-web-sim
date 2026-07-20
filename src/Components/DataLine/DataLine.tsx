@@ -13,8 +13,7 @@ export const DataLine = memo (
         handleDataUpdate
     } : DataLineProps) {
 
-        const [invalid, setInvalid] = useState(false);
-        const [dataInput, setDataInput] = useState("");
+        const [dataInput, setDataInput] = useState(data.data.content.toString());
 
         function handleOnBlur(event: React.FocusEvent<HTMLInputElement>): void {
             var newDataNumber = Number(event.target.value);
@@ -22,12 +21,17 @@ export const DataLine = memo (
                 address : data.address,
                 data : new SignedData(newDataNumber, 8)
             } as Data;
-            
+            console.log(newData);
             handleDataUpdate(newData);
+            setDataInput(newData.data.content.toString());
         }
 
         function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
             setDataInput(event.target.value);
+        }
+
+        function handleOnFocus(event: React.FocusEvent<HTMLInputElement>): void {
+            event.target.select();
         }
 
         return (
@@ -36,6 +40,7 @@ export const DataLine = memo (
                 <input className={styles.dataInput}
                     onChange={handleOnChange}
                     onBlur={handleOnBlur}
+                    onFocus={handleOnFocus}
                     value={dataInput}
 
                 />

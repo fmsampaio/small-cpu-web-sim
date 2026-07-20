@@ -14,10 +14,14 @@ export const InstructionLine = memo (
     } : InstructionLineProps) {
 
         const [invalid, setInvalid] = useState(false);
-        const [assemblyDataInput, setAssemblyDataInput] = useState("");
+        const [assemblyDataInput, setAssemblyDataInput] = useState(instruction.assembly);
 
         function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
             setAssemblyDataInput(event.target.value);
+        }
+
+        function handleOnFocus(event: React.FocusEvent<HTMLInputElement>): void {
+            event.target.select();
         }
 
         function handleOnBlur(event: React.FocusEvent<HTMLInputElement>): void {
@@ -59,6 +63,7 @@ export const InstructionLine = memo (
                     value={assemblyDataInput}
                     onBlur={handleOnBlur}
                     onChange={handleOnChange}
+                    onFocus={handleOnFocus}
                 />
 
                 <output className={styles.machineCode}>

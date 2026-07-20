@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import type { Data, DataMemory } from "../../Core/SmallCPU";
 import styles from "./DataMemoryView.module.css"
 import { DataLine } from "../DataLine/DataLine";
@@ -13,8 +13,6 @@ export const DataMemoryView = memo (
         dataMemory,
         handleDataMemoryUpdate
     } : DataMemoryViewProps ) {
-
-        const [dataMemState, setDataMemState] = useState<DataMemory>(dataMemory);
 
         function handleDataUpdate(updatedData : Data) : void {
             handleDataMemoryUpdate(updatedData);

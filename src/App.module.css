@@ -3,5 +3,6 @@
     flex-direction: row;
     gap: 1rem;
     align-items: flex-start;
-    padding: 1rem;
+    padding: 5rem;
+    height: calc(100dvh - 200px);
 }

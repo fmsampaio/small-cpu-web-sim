@@ -11,12 +11,21 @@ export abstract class BaseData {
   maxValue: number;
 
   constructor(content: number, bitWidth: number) {
-    this.content = content;
     this.bitWidth = bitWidth;
 
     // subclasses definem os limites
     this.minValue = this.computeMinValue();
     this.maxValue = this.computeMaxValue();
+
+    if(content < this.minValue) {
+      this.content = this.minValue;
+    }
+    else if(content > this.maxValue) {
+      this.content = this.maxValue;
+    }
+    else {
+      this.content = content;
+    }
   }
 
   // métodos que cada classe filha deve implementar

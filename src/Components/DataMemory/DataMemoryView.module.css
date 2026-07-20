@@ -4,7 +4,7 @@
 
   /* max-width: 420px; */
   width: max-content;
-  height: calc(100dvh - 40px);
+  height: 100%;
   
   box-sizing: border-box;
 
@@ -16,7 +16,7 @@
 
 .header {
     display: grid;
-    grid-template-columns:3rem 5rem;
+    grid-template-columns: 4rem 4rem;
     font-weight: bold;
     background: #eeeeee;
     border-bottom: 1px solid #bdbdbd;
