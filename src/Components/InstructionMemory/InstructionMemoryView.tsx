@@ -24,8 +24,13 @@ export const InstructionMemoryView = memo(
 
     return (
       <div className = {styles.panel}>
+        <h2>Instructions Memory</h2>
         <div className={styles.header}>
-            ...
+            <span>PC</span>
+            <span>ADD.</span>
+            <span>ASSEMBLY</span>
+            <span>HEX</span>
+            <span>MODE</span>
         </div>
         <div className={styles.body}>
           {instructions.map((instruction) => (

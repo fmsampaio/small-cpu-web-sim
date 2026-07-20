@@ -356,7 +356,7 @@ export class SmallCPU {
       assembly: "XXXX",
       bin: "",
       dec: 0,
-      hex: "0x",
+      hex: "",
       fields: {
         inst: "NULL"
       }
@@ -404,6 +404,9 @@ export class SmallCPU {
   }
 
   updateInstruction(instruction: Instruction): void {
+    if(this.pc.content === instruction.address) {
+      instruction.pcIsHere = true;
+    }
     if(instruction.address >= 0 && instruction.address < 256) {
       this.instructionMemory[instruction.address] = instruction;
     }
