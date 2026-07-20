@@ -12,12 +12,17 @@ function App() {
   const [cpuState, setCpuState] = useState<StateSmallCPU>(cpu.exportState())
   
   useEffect( () => {
-    console.log(cpuState.instructionMemory)
+    console.log(cpuState.instructionMemory);
   }, [cpuState])
 
   function handleInstructionMemoryUpdate(instruction : Instruction) {
     cpu.updateInstruction(instruction);
-    setCpuState(cpu.exportState())
+    setCpuState(cpu.exportState());
+  }
+
+  function handleInvalidInstructionMemoryUpdate(address : number) {
+    cpu.updateInvalidInstruction(address);
+    setCpuState(cpu.exportState());
   }
 
   return (
@@ -25,6 +30,7 @@ function App() {
       <InstructionMemoryView 
         instructionMemory={cpuState.instructionMemory}
         handleInstructionMemoryUpdate={handleInstructionMemoryUpdate}
+        handleInvalidInstructionMemoryUpdate={handleInvalidInstructionMemoryUpdate}
       />
     </>
   )

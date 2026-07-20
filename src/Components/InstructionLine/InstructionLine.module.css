@@ -17,20 +17,13 @@
 
   padding: 0.4rem 0.5rem;
   border: 1px solid;
+}
 
+.validInput {
   background-color: white;
 }
 
-.invalidAssemblyInput {
-  width: 100%;
-  max-width: 200px;
-  box-sizing: border-box;
-
-  padding: 0.4rem 0.5rem;
-  border: 1px solid;
-  border-radius: 4px;
-
-  font-family: var(--font-monospace);
+.invalidInput {
   background-color: antiquewhite;
 }
 

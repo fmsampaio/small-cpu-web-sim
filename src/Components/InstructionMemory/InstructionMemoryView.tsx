@@ -8,18 +8,26 @@ import styles from "./InstructionMemoryView.module.css"
 interface InstructionMemoryProps {
     instructionMemory: InstructionMemory,
     handleInstructionMemoryUpdate : (updatedInstruction : Instruction) => void,
+    handleInvalidInstructionMemoryUpdate : (address : number) => void,
 }
 
 export const InstructionMemoryView = memo( 
   function InstructionMemory( {
       instructionMemory, 
-      handleInstructionMemoryUpdate
+      handleInstructionMemoryUpdate,
+      handleInvalidInstructionMemoryUpdate
     } : InstructionMemoryProps ) {
 
     const [instructions, setInstructions] = useState<InstructionMemory>(instructionMemory);
 
-    function handleInstructionUpdate(updatedInstruction : Instruction) {
-      handleInstructionMemoryUpdate(updatedInstruction)
+    function handleInstructionUpdate(validation : string, address : number, updatedInstruction? : Instruction) {
+      if(validation === "INVALID_PATTERN") {
+        console.log("Instrução inválida!")
+        handleInvalidInstructionMemoryUpdate(address);
+      }
+      if(updatedInstruction !== undefined) {
+        handleInstructionMemoryUpdate(updatedInstruction);
+      }
     }
 
     return (

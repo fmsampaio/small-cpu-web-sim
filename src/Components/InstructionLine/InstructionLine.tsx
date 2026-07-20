@@ -4,7 +4,7 @@ import styles from "./InstructionLine.module.css"
 
 interface InstructionLineProps {
     instruction: Instruction,
-    handleInstructionUpdate: (updatedInstruction : Instruction) => void
+    handleInstructionUpdate: (validation: string, address : number, updatedInstruction?: Instruction) => void
 }
 
 export const InstructionLine = memo (
@@ -14,23 +14,27 @@ export const InstructionLine = memo (
     } : InstructionLineProps) {
 
         const [invalid, setInvalid] = useState(false);
+        const [assemblyData, setAssemblyData] = useState("");
+
+        function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
+            setAssemblyData(event.target.value);
+        }
 
         function handleOnBlur(event: React.FocusEvent<HTMLInputElement>): void {
             var assemblyInput = event.target.value;
+            var validation = "";
 
             try {
-                isValidAssembly(assemblyInput);
+                validation = isValidAssembly(assemblyInput);
                 var newInst = parseAssembly(instruction.address, assemblyInput) as Instruction;
                 console.log(newInst);
-                handleInstructionUpdate(newInst);
+                handleInstructionUpdate(validation, instruction.address, newInst);
                 setInvalid(false);
-                event.target.value = newInst.assembly;
+                setAssemblyData(newInst.assembly);
             }
             catch(error) {
-                if(assemblyInput != "") {
-                    console.log("Instrução inválida!");
-                    setInvalid(true);
-                }
+                setInvalid(assemblyInput != "");
+                handleInstructionUpdate(validation, instruction.address);
             }
         }
 
@@ -50,9 +54,11 @@ export const InstructionLine = memo (
 
                 <input
                     data-memory-address={instruction.address}
-                    className={`${invalid ? styles.invalidAssemblyInput : styles.assemblyInput}`}
+                    className={`${styles.assemblyInput} ${invalid ? styles.invalidInput : styles.validInput}`}
                     type="text"
+                    value={assemblyData}
                     onBlur={handleOnBlur}
+                    onChange={handleOnChange}
                 />
 
                 <output className={styles.machineCode}>

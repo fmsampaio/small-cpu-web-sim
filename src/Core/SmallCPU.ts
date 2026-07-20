@@ -353,7 +353,7 @@ export class SmallCPU {
     this.instructionMemory = Array.from({ length: 256 }, (_, address) => ({
       pcIsHere: false,
       address,
-      assembly: "XXXX",
+      assembly: "",
       bin: "",
       dec: 0,
       hex: "",
@@ -403,10 +403,23 @@ export class SmallCPU {
     }
   }
 
+  updateInvalidInstruction(address : number): void {
+    const invalidInstruction = {
+      pcIsHere: this.pc.content === address,
+      address : address,
+      assembly: "",
+      bin: "",
+      dec: 0,
+      hex: "",
+      fields: {
+        inst: "NULL"
+      } 
+    } as Instruction;
+    this.updateInstruction(invalidInstruction);
+  }
+
   updateInstruction(instruction: Instruction): void {
-    if(this.pc.content === instruction.address) {
-      instruction.pcIsHere = true;
-    }
+    instruction.pcIsHere = this.pc.content === instruction.address;
     if(instruction.address >= 0 && instruction.address < 256) {
       this.instructionMemory[instruction.address] = instruction;
     }
