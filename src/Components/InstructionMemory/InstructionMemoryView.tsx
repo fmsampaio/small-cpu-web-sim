@@ -33,10 +33,10 @@ export const InstructionMemoryView = memo(
         <h2>Instructions Memory</h2>
         <div className={styles.header}>
             <span>PC</span>
-            <span>ADD.</span>
-            <span>ASSEMBLY</span>
+            <span>Add.</span>
+            <span>Assembly</span>
             <span>HEX</span>
-            <span>MODE</span>
+            <span>Mode</span>
         </div>
         <div className={styles.body}>
           {instructionMemory.map((instruction) => (

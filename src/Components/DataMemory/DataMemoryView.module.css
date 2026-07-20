@@ -1,0 +1,31 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+
+  /* max-width: 420px; */
+  width: max-content;
+  height: calc(100dvh - 40px);
+  
+  box-sizing: border-box;
+
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+
+  overflow: hidden;
+}
+
+.header {
+    display: grid;
+    grid-template-columns:3rem 5rem;
+    font-weight: bold;
+    background: #eeeeee;
+    border-bottom: 1px solid #bdbdbd;
+    padding: 2px;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex: 1;
+}

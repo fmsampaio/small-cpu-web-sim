@@ -330,8 +330,6 @@ export interface StateSmallCPU {
 
 export {isValidAssembly, parseAssembly};
 
-
-
 export class SmallCPU {
   registerFile!: Record<RegisterName, BaseData>;
   ccFile!: Record<ConditionCodeName, boolean>;
@@ -442,15 +440,20 @@ export class SmallCPU {
     }
   }
 
-  updateData(address: number, data: number): void {
-    if(address >= 0 && address < 256) {
-      this.dataMemory[address] = {
-        address: address,
-        data: new SignedData(data, 8)
-      }
+  updateDataNumber(address: number, data: number): void {
+    const newData =  {
+      address : address,
+      data : new SignedData(data, 8)
+    };
+    this.updateData(newData);
+  }
+
+  updateData(data : Data): void {
+    if(data.address >= 0 && data.address < 256) {
+      this.dataMemory[data.address] = data;
     }
     else {
-      throw new Error(`Endereço inválido: ${address}`);
+      throw new Error(`Endereço inválido: ${data.address}`);
     }
   }
 

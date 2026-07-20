@@ -57,11 +57,11 @@ function program1() {
         cpu.updateAssembly(address, asmCode[address]);        
     }
 
-    cpu.updateData(2, 1);
-    cpu.updateData(3, 2);
-    cpu.updateData(4, 3);
-    cpu.updateData(5, 4);
-    cpu.updateData(6, 5);
+    cpu.updateDataNumber(2, 1);
+    cpu.updateDataNumber(3, 2);
+    cpu.updateDataNumber(4, 3);
+    cpu.updateDataNumber(5, 4);
+    cpu.updateDataNumber(6, 5);
 
     cpu.run();
 

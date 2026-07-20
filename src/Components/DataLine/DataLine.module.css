@@ -1,0 +1,15 @@
+.row {
+  display: grid;
+  grid-template-columns: 3rem 4rem;
+  align-items: center;
+  min-height: 40px;
+}
+
+.dataInput {
+  width: 100%;
+  max-width: 200px;
+  box-sizing: border-box;
+
+  padding: 0.4rem 0.5rem;
+  border: 1px solid;
+}
