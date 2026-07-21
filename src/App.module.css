@@ -5,4 +5,5 @@
     align-items: flex-start;
     padding: 5rem;
     height: calc(100dvh - 200px);
+    justify-content: space-between;
 }

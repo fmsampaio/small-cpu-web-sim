@@ -1,0 +1,29 @@
+@import url('https://fonts.cdnfonts.com/css/ds-digital');
+
+.container {
+    border : 0.5px solid transparent;
+    margin: 5px 5px 5px 5px;
+    width: 35px;
+    align-items: center;
+    min-height: fit-content;
+}
+
+.container_highlight {
+    margin: 5px 5px 5px 5px;
+    width: 35px;
+    align-items: center;
+	border : 0.5px solid rgba(128, 0, 0, 0.575);
+	background: rgba(168, 2, 2, 0.062);
+}
+
+h3 {
+    text-align: center;
+    margin: 3px;
+}
+
+.register_p {
+    font-family: 'DS-Digital', sans-serif;
+    font-size: xx-large;
+    text-align: center;
+    margin: 5px
+}

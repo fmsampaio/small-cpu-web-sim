@@ -1,0 +1,71 @@
+
+.led {
+  width: 20px;
+  height: 20px;
+
+  display: inline-block;
+  position: relative;
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.35),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.20);
+
+  transition: all 0.2s ease;
+}
+
+.led::before {
+  content: "";
+
+  position: absolute;
+
+  top: 2px;
+  left: 3px;
+
+  width: 14px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,.85),
+    rgba(255,255,255,.15)
+  );
+
+  pointer-events: none;
+}
+
+.ledFalse {
+  background: linear-gradient(
+    to bottom,
+    #f8b4ab 0%,
+    #ef6b5c 45%,
+    #cf2e1c 100%
+  );
+
+  border: 1px solid #b3261e;
+
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.35),
+    0 0 8px rgba(239,107,92,.45),
+    inset 0 -2px 3px rgba(120,20,20,.30);
+}
+
+.ledTrue {
+  background: linear-gradient(
+    to bottom,
+    #b8f5b4 0%,
+    #57d957 45%,
+    #178d17 100%
+  );
+
+  border: 1px solid #147414;
+
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.35),
+    0 0 8px rgba(87,217,87,.45),
+    inset 0 -2px 3px rgba(10,90,10,.30);
+}
+

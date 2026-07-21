@@ -4,6 +4,7 @@ import { type Data, type Instruction, type StateSmallCPU, SmallCPU } from './Cor
 import { DataMemoryView } from './Components/DataMemory/DataMemoryView';
 
 import styles from "./App.module.css"
+import { RegisterPanel } from './Components/RegisterPanel/RegisterPanel';
 
 function App() {
   const cpu = useMemo(
@@ -42,6 +43,9 @@ function App() {
       <DataMemoryView
         dataMemory={cpuState.dataMemory}
         handleDataMemoryUpdate={handleMemoryUpdate}
+      />
+      <RegisterPanel
+         cpuState={cpuState} 
       />
     </main>
   )
