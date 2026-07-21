@@ -5,6 +5,7 @@ import { DataMemoryView } from './Components/DataMemory/DataMemoryView';
 
 import styles from "./App.module.css"
 import { RegisterPanel } from './Components/RegisterPanel/RegisterPanel';
+import { SimulationControl } from './Components/SimulationControl/SimulationControl';
 
 function App() {
   const cpu = useMemo(
@@ -33,6 +34,11 @@ function App() {
     setCpuState(cpu.exportState());
   }
 
+  function handleStepBtn() {
+    cpu.step();
+    setCpuState(cpu.exportState());
+  }
+
   return (
     <main className={styles.main_container}>
       <InstructionMemoryView 
@@ -44,9 +50,14 @@ function App() {
         dataMemory={cpuState.dataMemory}
         handleDataMemoryUpdate={handleMemoryUpdate}
       />
-      <RegisterPanel
-         cpuState={cpuState} 
-      />
+      <div className={styles.side_container}>
+        <RegisterPanel
+          cpuState={cpuState} 
+        />
+        <SimulationControl
+          handleStepBtn={handleStepBtn}
+        />
+      </div>
     </main>
   )
 }

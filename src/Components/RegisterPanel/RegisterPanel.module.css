@@ -1,6 +1,11 @@
-.regs_container {
-    width: 300px;
+.container {
+    width: 100%;
     height: fit-content;
+    background-color: rgba(220, 220, 220, 0.39);
+}
+
+.regs_container {
+    padding: 20px 20px 20px 20px;
 }
 
 .internal_regs_container {

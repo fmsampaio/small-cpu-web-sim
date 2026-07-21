@@ -1,25 +1,19 @@
 .panel {
-  display: flex;
-  flex-direction: column;
-
-  /* max-width: 420px; */
-  width: max-content;
-  height: 100%;
-  
-  box-sizing: border-box;
-
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 20px 20px 20px 20px;
+    background-color: rgba(220, 220, 220, 0.39);
 }
 
 .header {
     display: grid;
     grid-template-columns: 4rem 4rem;
     font-weight: bold;
-    background: #eeeeee;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid black;
     padding: 2px;
 }
 
