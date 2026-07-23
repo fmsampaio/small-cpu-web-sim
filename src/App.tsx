@@ -38,7 +38,11 @@ function App() {
   function handleStepBtn() {
     cpu.step();
     setCpuState(cpu.exportState());
-    console.log(cpu.dataMemory)
+  }
+
+  function handleResetBtn() {
+    cpu.resetRegisters();
+    setCpuState(cpu.exportState());
   }
 
   return (
@@ -58,6 +62,7 @@ function App() {
         />
         <SimulationControl
           handleStepBtn={handleStepBtn}
+          handleResetBtn={handleResetBtn}
         />
       </div>
     </main>

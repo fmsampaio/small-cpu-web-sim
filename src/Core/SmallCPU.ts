@@ -412,6 +412,7 @@ export class SmallCPU {
     }
 
     this.updatePcIsHere();
+    this.isHltReached = false;
   }
 
   storeDataInMemory(address : number, content : number) {

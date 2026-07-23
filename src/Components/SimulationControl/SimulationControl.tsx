@@ -3,12 +3,14 @@ import { memo } from "react";
 import styles from "./SimulationControl.module.css"
 
 interface SimulationControlProps {
-    handleStepBtn : () => void
+    handleStepBtn : () => void,
+    handleResetBtn : () => void,
 }
 
 export const SimulationControl = memo (
     function SimulationPanel( {
-        handleStepBtn      
+        handleStepBtn,
+        handleResetBtn    
     } : SimulationControlProps) {
         return (
             <div className={styles.container}>
@@ -38,6 +40,7 @@ export const SimulationControl = memo (
                         </button>
                         <button
                             className={styles.button_4}
+                            onClick={handleResetBtn}
                         >
                             Reset
                         </button>
