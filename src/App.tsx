@@ -48,6 +48,7 @@ function App() {
   return (
     <main className={styles.main_container}>
       <InstructionMemoryView 
+        pc={cpuState.pc}
         instructionMemory={cpuState.instructionMemory}
         handleInstructionMemoryUpdate={handleInstructionMemoryUpdate}
         handleInvalidInstructionMemoryUpdate={handleInvalidInstructionMemoryUpdate}

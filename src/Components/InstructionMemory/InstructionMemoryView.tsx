@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import type { Instruction, InstructionMemory } from "../../Core/SmallCPU";
 import { InstructionLine } from "../InstructionLine/InstructionLine";
 
@@ -6,6 +6,7 @@ import styles from "./InstructionMemoryView.module.css"
 
 
 interface InstructionMemoryViewProps {
+    pc: number,
     instructionMemory: InstructionMemory,
     handleInstructionMemoryUpdate : (updatedInstruction : Instruction) => void,
     handleInvalidInstructionMemoryUpdate : (address : number) => void,
@@ -13,6 +14,7 @@ interface InstructionMemoryViewProps {
 
 export const InstructionMemoryView = memo( 
   function InstructionMemoryView( {
+      pc,
       instructionMemory, 
       handleInstructionMemoryUpdate,
       handleInvalidInstructionMemoryUpdate
@@ -41,6 +43,7 @@ export const InstructionMemoryView = memo(
         <div className={styles.body}>
           {instructionMemory.map((instruction) => (
             <InstructionLine
+              pcIsHere={(pc === instruction.address)}
               key={instruction.address}
               instruction={instruction}
               handleInstructionUpdate={handleInstructionUpdate}

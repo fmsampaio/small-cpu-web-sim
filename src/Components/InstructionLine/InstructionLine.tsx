@@ -3,12 +3,14 @@ import { isValidAssembly, parseAssembly, type Instruction } from "../../Core/Sma
 import styles from "./InstructionLine.module.css"
 
 interface InstructionLineProps {
+    pcIsHere: boolean,
     instruction: Instruction,
     handleInstructionUpdate: (validation: string, address : number, updatedInstruction?: Instruction) => void
 }
 
 export const InstructionLine = memo (
     function InstructionLine( {
+        pcIsHere,
         instruction,
         handleInstructionUpdate
     } : InstructionLineProps) {
@@ -44,7 +46,7 @@ export const InstructionLine = memo (
 
         return ( 
             <div className={styles.row}>
-                { instruction.pcIsHere ?
+                { pcIsHere ?
                     <span className={`${styles.tag} ${styles.pcIsHere}`}>
                         PC
                     </span> 

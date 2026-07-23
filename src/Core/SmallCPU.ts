@@ -112,7 +112,6 @@ export interface InstructionFields {
 }
 
 export interface Instruction {
-  pcIsHere?: boolean;
   address: number;
   assembly: string;
   bin: string;
@@ -250,7 +249,6 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const hex = dec.toString(16).toUpperCase();
 
     return {
-      pcIsHere: false,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -265,7 +263,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     }    
   }
   else if(pattern === "JC_PATTERN") {
-    const ccStr = match![2];
+    const ccStr = match![2] as ConditionCodeName;
     const memValue = Number(match![3]);
 
     const ccBin = CC_TO_BIN[ccStr];    
@@ -276,7 +274,6 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const hex = dec.toString(16).toUpperCase();
 
     return {
-      pcIsHere: false,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -297,7 +294,6 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const dec = parseInt(bin, 2);
     const hex = dec.toString(16).toUpperCase();
     return {
-      pcIsHere: false,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -314,7 +310,6 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const dec = parseInt(bin, 2);
     const hex = dec.toString(16).toUpperCase();
     return {
-      pcIsHere: false,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -368,7 +363,6 @@ export class SmallCPU {
 
   resetMemories() {
     this.instructionMemory = Array.from({ length: 256 }, (_, address) => ({
-      pcIsHere: false,
       address,
       assembly: "",
       bin: "0000000000000000",
@@ -400,18 +394,16 @@ export class SmallCPU {
 
     this.pc = new UnsignedData(0, 8);
     this.ri = {
-      pcIsHere: false,
       address: -1,
       assembly: "",
       bin: "",
       dec: 0,
       hex: "",
       fields: {
-        inst: ""
+        inst: "NULL"
       }
     }
 
-    this.updatePcIsHere();
     this.isHltReached = false;
   }
 
@@ -427,15 +419,8 @@ export class SmallCPU {
     })
   }
 
-  updatePcIsHere() {
-    for (let i = 0; i < this.instructionMemory.length; i++) {
-      this.instructionMemory[i].pcIsHere = (i === this.pc.content);
-    }
-  }
-
   updateInvalidInstruction(address : number): void {
     const invalidInstruction = {
-      pcIsHere: this.pc.content === address,
       address : address,
       assembly: "",
       bin: "0000000000000000",
@@ -449,7 +434,6 @@ export class SmallCPU {
   }
 
   updateInstruction(instruction: Instruction): void {
-    instruction.pcIsHere = this.pc.content === instruction.address;
     if(instruction.address >= 0 && instruction.address < 256) {
       this.instructionMemory[instruction.address] = instruction;
     }
