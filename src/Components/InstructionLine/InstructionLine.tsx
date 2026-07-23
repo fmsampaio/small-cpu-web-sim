@@ -5,7 +5,7 @@ import styles from "./InstructionLine.module.css"
 interface InstructionLineProps {
     pcIsHere: boolean,
     instruction: Instruction,
-    handleInstructionUpdate: (validation: string, address : number, updatedInstruction?: Instruction) => void
+    handleInstructionUpdate: (updatedInstruction: Instruction) => void
 }
 
 export const InstructionLine = memo (
@@ -15,15 +15,11 @@ export const InstructionLine = memo (
         handleInstructionUpdate
     } : InstructionLineProps) {
 
-        const [invalid, setInvalid] = useState(false);
         const [assemblyDataInput, setAssemblyDataInput] = useState(instruction.assembly);
 
-        // useEffect( () => {
-        //     if(instruction.fields.inst === "NULL" && assemblyDataInput != "") {
-
-        //     } 
-        //     setAssemblyDataInput(instruction.assembly);
-        // }, [instruction]);
+        useEffect( () => {
+            setAssemblyDataInput(instruction.assembly);
+        }, [instruction]);
 
         function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
             setAssemblyDataInput(event.target.value);
@@ -35,20 +31,10 @@ export const InstructionLine = memo (
 
         function handleOnBlur(event: React.FocusEvent<HTMLInputElement>): void {
             var assemblyInput = event.target.value;
-            var validation = "";
-
-            try {
-                validation = isValidAssembly(assemblyInput);
-                var newInst = parseAssembly(instruction.address, assemblyInput) as Instruction;
-                console.log(newInst);
-                handleInstructionUpdate(validation, instruction.address, newInst);
-                setInvalid(false);
-                setAssemblyDataInput(newInst.assembly);
-            }
-            catch(error) {
-                setInvalid(assemblyInput != "");
-                handleInstructionUpdate(validation, instruction.address);
-            }
+            var newInst = parseAssembly(instruction.address, assemblyInput) as Instruction;
+            console.log(newInst);
+            setAssemblyDataInput(newInst.assembly);
+            handleInstructionUpdate(newInst);           
         }
 
         return ( 
@@ -67,7 +53,7 @@ export const InstructionLine = memo (
 
                 <input
                     data-memory-address={instruction.address}
-                    className={`${styles.assemblyInput} ${invalid ? styles.invalidInput : styles.validInput}`}
+                    className={`${styles.assemblyInput} ${(instruction.isValid || instruction.assembly === "") ? styles.validInput : styles.invalidInput}`}
                     type="text"
                     value={assemblyDataInput}
                     onBlur={handleOnBlur}

@@ -24,11 +24,6 @@ function App() {
     setCpuState(cpu.exportState());
   }
 
-  function handleInvalidInstructionMemoryUpdate(address : number) {
-    cpu.updateInvalidInstruction(address);
-    setCpuState(cpu.exportState());
-  }
-
   function handleMemoryUpdate(data : Data) {
     // cpu.updateData(data);
     cpu.storeDataInMemory(data.address, data.data.content)
@@ -60,10 +55,8 @@ function App() {
   return (
     <main className={styles.main_container}>
       <InstructionMemoryView 
-        pc={cpuState.pc}
         cpuState={cpuState}
         handleInstructionMemoryUpdate={handleInstructionMemoryUpdate}
-        handleInvalidInstructionMemoryUpdate={handleInvalidInstructionMemoryUpdate}
       />
       <DataMemoryView
         cpuState={cpuState}

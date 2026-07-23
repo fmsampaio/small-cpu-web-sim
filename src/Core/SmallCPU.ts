@@ -32,21 +32,6 @@ export abstract class BaseData {
   protected abstract computeMinValue(): number;
   protected abstract computeMaxValue(): number;
 
-  // assign(value: number) {
-  //   if(value > this.maxValue) {
-  //     const diff = value - this.maxValue;
-  //     this.content = this.minValue + diff;
-  //   }
-  //   else if(value < this.minValue) {
-  //     const diff = this.maxValue - value;
-  //     this.content = this.maxValue - diff;
-  //   }
-  //   else {
-  //     this.content = value;
-  //   }
-  // }
-
-
   add(value: number) {
     const partialSum = this.content + value;
 
@@ -112,6 +97,7 @@ export interface InstructionFields {
 }
 
 export interface Instruction {
+  isValid: boolean;
   address: number;
   assembly: string;
   bin: string;
@@ -218,8 +204,19 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
   assembly = assembly.toUpperCase()
 
   let pattern = isValidAssembly(assembly);
-  if(pattern === "INVALID_PATTERN") 
-    throw new Error("Invalid instruction!");
+  if(pattern === "INVALID_PATTERN") {
+    return {
+      isValid: false,
+      address: address,
+      assembly: assembly,
+      bin: "0000000000000000",
+      dec: 0,
+      hex: "0",
+      fields: {
+        inst: "NULL"
+      }
+    }
+  }
   
   const match = assembly.match(INSTRUCTION_VALIDATION[pattern]);
 
@@ -249,6 +246,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const hex = dec.toString(16).toUpperCase();
 
     return {
+      isValid: true,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -274,6 +272,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const hex = dec.toString(16).toUpperCase();
 
     return {
+      isValid: true,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -294,6 +293,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const dec = parseInt(bin, 2);
     const hex = dec.toString(16).toUpperCase();
     return {
+      isValid: true,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -310,6 +310,7 @@ const parseAssembly = function(address: number, assembly: string): Instruction {
     const dec = parseInt(bin, 2);
     const hex = dec.toString(16).toUpperCase();
     return {
+      isValid: true,
       address: address,
       assembly: assembly,
       bin: bin,
@@ -363,6 +364,7 @@ export class SmallCPU {
 
   resetMemories() {
     this.instructionMemory = Array.from({ length: 256 }, (_, address) => ({
+      isValid: false,
       address,
       assembly: "",
       bin: "0000000000000000",
@@ -394,6 +396,7 @@ export class SmallCPU {
 
     this.pc = new UnsignedData(0, 8);
     this.ri = {
+      isValid: false,
       address: -1,
       assembly: "",
       bin: "",
@@ -417,20 +420,6 @@ export class SmallCPU {
         data: new SignedData(content, item.data.bitWidth),
       };
     })
-  }
-
-  updateInvalidInstruction(address : number): void {
-    const invalidInstruction = {
-      address : address,
-      assembly: "",
-      bin: "0000000000000000",
-      dec: 0,
-      hex: "0",
-      fields: {
-        inst: "NULL"
-      } 
-    } as Instruction;
-    this.updateInstruction(invalidInstruction);
   }
 
   updateInstruction(instruction: Instruction): void {

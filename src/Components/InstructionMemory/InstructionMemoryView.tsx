@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { Instruction, InstructionMemory, StateSmallCPU } from "../../Core/SmallCPU";
+import type { Instruction, StateSmallCPU } from "../../Core/SmallCPU";
 import { InstructionLine } from "../InstructionLine/InstructionLine";
 
 import styles from "./InstructionMemoryView.module.css"
@@ -8,24 +8,16 @@ import styles from "./InstructionMemoryView.module.css"
 interface InstructionMemoryViewProps {
     cpuState : StateSmallCPU,
     handleInstructionMemoryUpdate : (updatedInstruction : Instruction) => void,
-    handleInvalidInstructionMemoryUpdate : (address : number) => void,
 }
 
 export const InstructionMemoryView = memo( 
   function InstructionMemoryView( {
       cpuState,
       handleInstructionMemoryUpdate,
-      handleInvalidInstructionMemoryUpdate
     } : InstructionMemoryViewProps ) {
 
-    function handleInstructionUpdate(validation : string, address : number, updatedInstruction? : Instruction) : void {
-      if(validation === "INVALID_PATTERN") {
-        console.log("Instrução inválida!")
-        handleInvalidInstructionMemoryUpdate(address);
-      }
-      if(updatedInstruction !== undefined) {
-        handleInstructionMemoryUpdate(updatedInstruction);
-      }
+    function handleInstructionUpdate( updatedInstruction : Instruction) : void {
+      handleInstructionMemoryUpdate(updatedInstruction);
     }
 
     return (
