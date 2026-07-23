@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react"
-import { isValidAssembly, parseAssembly, type Instruction } from "../../Core/SmallCPU"
+import { parseAssembly, type Instruction } from "../../Core/SmallCPU"
 import styles from "./InstructionLine.module.css"
 
 interface InstructionLineProps {
@@ -61,9 +61,9 @@ export const InstructionLine = memo (
                     onFocus={handleOnFocus}
                 />
 
-                <output className={styles.machineCode}>
-                    {instruction.hex}
-                </output>
+                <span className={`${styles.machineCode} ${(instruction.isValid || instruction.assembly !== "") ? styles.visible : ""}`}>
+                    {(instruction.isValid || instruction.assembly !== "") && instruction.hex}
+                </span>
 
                 { instruction.fields.mode === "DIR" ?
                     <span className={`${styles.tag} ${styles.dirMode}`}>
