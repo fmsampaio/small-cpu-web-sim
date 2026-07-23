@@ -6,13 +6,15 @@ interface SimulationControlProps {
     handleStepBtn : () => void,
     handleResetBtn : () => void,
     handleRunBtn : () => void,
+    handleClearMemoriesBtn : () => void,
 }
 
 export const SimulationControl = memo (
     function SimulationPanel( {
         handleStepBtn,
         handleResetBtn,
-        handleRunBtn  
+        handleRunBtn,
+        handleClearMemoriesBtn
     } : SimulationControlProps) {
         return (
             <div className={styles.container}>
@@ -27,6 +29,7 @@ export const SimulationControl = memo (
                         </button>
                         <button
                             className={styles.button_4}
+                            onClick={handleClearMemoriesBtn}
                         >
                             Clear Memories
                         </button>

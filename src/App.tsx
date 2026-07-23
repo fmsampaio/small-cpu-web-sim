@@ -50,12 +50,18 @@ function App() {
     setCpuState(cpu.exportState());
   }
 
+  function handleClearMemoriesBtn() {
+    cpu.resetRegisters();
+    cpu.resetMemories();
+    setCpuState(cpu.exportState());
+  }
+
 
   return (
     <main className={styles.main_container}>
       <InstructionMemoryView 
         pc={cpuState.pc}
-        instructionMemory={cpuState.instructionMemory}
+        cpuState={cpuState}
         handleInstructionMemoryUpdate={handleInstructionMemoryUpdate}
         handleInvalidInstructionMemoryUpdate={handleInvalidInstructionMemoryUpdate}
       />
@@ -71,6 +77,7 @@ function App() {
           handleStepBtn={handleStepBtn}
           handleResetBtn={handleResetBtn}
           handleRunBtn={handleRunBtn}
+          handleClearMemoriesBtn={handleClearMemoriesBtn}
         />
       </div>
     </main>

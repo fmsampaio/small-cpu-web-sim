@@ -18,6 +18,13 @@ export const InstructionLine = memo (
         const [invalid, setInvalid] = useState(false);
         const [assemblyDataInput, setAssemblyDataInput] = useState(instruction.assembly);
 
+        // useEffect( () => {
+        //     if(instruction.fields.inst === "NULL" && assemblyDataInput != "") {
+
+        //     } 
+        //     setAssemblyDataInput(instruction.assembly);
+        // }, [instruction]);
+
         function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
             setAssemblyDataInput(event.target.value);
         }
