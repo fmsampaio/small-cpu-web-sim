@@ -1,4 +1,4 @@
-import { memo } from "react"
+import { memo, useEffect } from "react"
 import styles from "./RegisterView.module.css"
 import { Led } from "../Led/Led";
 
@@ -12,11 +12,23 @@ export const RegisterView = memo (
     function RegisterView( {
         name, data, highlight
     } : RegisterProps ) {
+
+        useEffect( () => {
+            if(name === "RI") {
+                console.log(data);
+            }
+        }, [data])
+
         return (
             <div className = {highlight ? styles.container_highlight : styles.container}>
                 <h3>{name}</h3>
                 { typeof data === "string" && 
-                    <p className={styles.register_p}>{Number(data)}</p>
+                    (
+                        (data === "") ?
+                        <p className={styles.register_p}>0000</p>
+                        :
+                        <p className={styles.register_p}>{data}</p>                    
+                    )
                 }
                 { typeof data === "number" && 
                     <p className={styles.register_p}>{data}</p>

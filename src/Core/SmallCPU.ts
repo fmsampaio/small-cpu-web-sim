@@ -371,9 +371,9 @@ export class SmallCPU {
       pcIsHere: false,
       address,
       assembly: "",
-      bin: "",
+      bin: "0000000000000000",
       dec: 0,
-      hex: "",
+      hex: "0",
       fields: {
         inst: "NULL"
       }
@@ -437,9 +437,9 @@ export class SmallCPU {
       pcIsHere: this.pc.content === address,
       address : address,
       assembly: "",
-      bin: "",
+      bin: "0000000000000000",
       dec: 0,
-      hex: "",
+      hex: "0",
       fields: {
         inst: "NULL"
       } 
@@ -515,8 +515,12 @@ export class SmallCPU {
   }
 
   step() {
+    if(this.isHltReached)
+      return;
+
     this.ri = this.instructionMemory[this.pc.content];
-    console.log(`[DBG] Executing instruction: [${this.pc.content}] ${this.ri.assembly}`);
+    console.log(`[DBG] Executing instruction:`);
+    console.log(this.ri);
     this.pc.add(1);
 
     if(this.ri.fields.inst === "LDR") {
