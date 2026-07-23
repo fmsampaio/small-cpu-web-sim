@@ -40,10 +40,16 @@ function App() {
     setCpuState(cpu.exportState());
   }
 
+  function handleRunBtn() {
+    cpu.run();
+    setCpuState(cpu.exportState());
+  }
+
   function handleResetBtn() {
     cpu.resetRegisters();
     setCpuState(cpu.exportState());
   }
+
 
   return (
     <main className={styles.main_container}>
@@ -64,6 +70,7 @@ function App() {
         <SimulationControl
           handleStepBtn={handleStepBtn}
           handleResetBtn={handleResetBtn}
+          handleRunBtn={handleRunBtn}
         />
       </div>
     </main>

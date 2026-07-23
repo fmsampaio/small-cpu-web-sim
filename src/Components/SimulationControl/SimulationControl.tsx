@@ -5,12 +5,14 @@ import styles from "./SimulationControl.module.css"
 interface SimulationControlProps {
     handleStepBtn : () => void,
     handleResetBtn : () => void,
+    handleRunBtn : () => void,
 }
 
 export const SimulationControl = memo (
     function SimulationPanel( {
         handleStepBtn,
-        handleResetBtn    
+        handleResetBtn,
+        handleRunBtn  
     } : SimulationControlProps) {
         return (
             <div className={styles.container}>
@@ -30,6 +32,7 @@ export const SimulationControl = memo (
                         </button>
                         <button
                             className={styles.button_4}
+                            onClick={handleRunBtn}
                         >
                             Run
                         </button>
