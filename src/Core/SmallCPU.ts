@@ -32,19 +32,20 @@ export abstract class BaseData {
   protected abstract computeMinValue(): number;
   protected abstract computeMaxValue(): number;
 
-  assign(value: number) {
-    if(value > this.maxValue) {
-      const diff = value - this.maxValue;
-      this.content = this.minValue + diff;
-    }
-    else if(value < this.maxValue) {
-      const diff = this.maxValue - value;
-      this.content = this.maxValue - diff;
-    }
-    else {
-      this.content = value;
-    }
-  }
+  // assign(value: number) {
+  //   if(value > this.maxValue) {
+  //     const diff = value - this.maxValue;
+  //     this.content = this.minValue + diff;
+  //   }
+  //   else if(value < this.minValue) {
+  //     const diff = this.maxValue - value;
+  //     this.content = this.maxValue - diff;
+  //   }
+  //   else {
+  //     this.content = value;
+  //   }
+  // }
+
 
   add(value: number) {
     const partialSum = this.content + value;
@@ -81,6 +82,10 @@ export class UnsignedData extends BaseData {
   protected computeMaxValue(): number {
     return Math.pow(2, this.bitWidth) - 1;
   }
+
+  withValue(value: number): UnsignedData {
+    return new UnsignedData(value, this.bitWidth);
+  }
 }
 
 export class SignedData extends BaseData {
@@ -90,6 +95,11 @@ export class SignedData extends BaseData {
 
   protected computeMaxValue(): number {
     return Math.pow(2, this.bitWidth - 1) - 1;
+  }
+
+
+  withValue(value: number): SignedData {
+    return new SignedData(value, this.bitWidth);
   }
 }
 
@@ -340,7 +350,7 @@ export interface StateSmallCPU {
 export {isValidAssembly, parseAssembly};
 
 export class SmallCPU {
-  registerFile!: Record<RegisterName, BaseData>;
+  registerFile!: Record<RegisterName, SignedData>;
   ccFile!: Record<ConditionCodeName, boolean>;
   dataMemory!: DataMemory;
   instructionMemory!: InstructionMemory;
@@ -402,6 +412,18 @@ export class SmallCPU {
     }
 
     this.updatePcIsHere();
+  }
+
+  storeDataInMemory(address : number, content : number) {
+    this.dataMemory = this.dataMemory.map(item => {
+      if (item.address !== address) {
+        return item;
+      }
+      return {
+        ...item,
+        data: new SignedData(content, item.data.bitWidth),
+      };
+    })
   }
 
   updatePcIsHere() {
@@ -488,7 +510,7 @@ export class SmallCPU {
       pc : this.pc.content,
       ri : this.ri,
       isHltReached : this.isHltReached,
-      isTimeoutReached : this.isT 
+      isTimeoutReached : this.isTimeoutReached 
     }
   }
 
@@ -506,7 +528,8 @@ export class SmallCPU {
                               (addressMode === "IMM") ? memField :
                             /*(addressMode === "IDX")*/ this.dataMemory[memField + this.registerFile.RX.content].data.content;
 
-      this.registerFile[targetReg].assign(dataToBeLoaded);
+      // this.registerFile[targetReg].assign(dataToBeLoaded);
+      this.registerFile[targetReg] = this.registerFile[targetReg].withValue(dataToBeLoaded);
 
       this.updateConditionCodes(this.registerFile[targetReg].content);
     }
@@ -519,7 +542,9 @@ export class SmallCPU {
       const addressToBeStored = (addressMode === "DIR") ? memField :
                               /*(addressMode === "IDX")*/ memField + this.registerFile.RX.content;
       
-      this.dataMemory[addressToBeStored].data.assign(dataToBeStored);
+      // this.dataMemory[addressToBeStored].data.assign(dataToBeStored);
+      // this.dataMemory[addressToBeStored].data = this.dataMemory[addressToBeStored].data.withValue(dataToBeStored);
+      this.storeDataInMemory(addressToBeStored, dataToBeStored)
     }
     else if(this.ri.fields.inst === "ADD" || this.ri.fields.inst === "SUB") {
       const targetReg = this.ri.fields.reg!;
@@ -542,14 +567,15 @@ export class SmallCPU {
     }
     else if(this.ri.fields.inst === "JMP") {
       const memField = this.ri.fields.mem!;
-      this.pc.assign(memField);
+      // this.pc.assign(memField);
+      this.pc = this.pc.withValue(memField);
     }
     else if(this.ri.fields.inst === "JC") {
       const ccField = this.ri.fields.cc!;
       const memField = this.ri.fields.mem!;
 
       if(this.ccFile[ccField]) {
-        this.pc.assign(memField);
+        this.pc = this.pc.withValue(memField);
       }      
     }
     else if(this.ri.fields.inst === "HLT") {

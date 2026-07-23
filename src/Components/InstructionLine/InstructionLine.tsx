@@ -1,4 +1,4 @@
-import { memo, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { isValidAssembly, parseAssembly, type Instruction } from "../../Core/SmallCPU"
 import styles from "./InstructionLine.module.css"
 
@@ -15,6 +15,10 @@ export const InstructionLine = memo (
 
         const [invalid, setInvalid] = useState(false);
         const [assemblyDataInput, setAssemblyDataInput] = useState(instruction.assembly);
+
+        useEffect( () => {
+            setAssemblyDataInput(instruction.assembly)
+        }, [instruction])
 
         function handleOnChange(event: React.FocusEvent<HTMLInputElement>): void {
             setAssemblyDataInput(event.target.value);

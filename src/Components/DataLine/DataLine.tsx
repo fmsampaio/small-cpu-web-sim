@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { SignedData, type Data } from "../../Core/SmallCPU";
 import styles from "./DataLine.module.css"
 
@@ -14,6 +14,10 @@ export const DataLine = memo (
     } : DataLineProps) {
 
         const [dataInput, setDataInput] = useState(data.data.content.toString());
+
+        useEffect( () => {
+            setDataInput(data.data.content.toString())
+        }, [data])
 
         function handleOnBlur(event: React.FocusEvent<HTMLInputElement>): void {
             var newDataNumber = Number(event.target.value);

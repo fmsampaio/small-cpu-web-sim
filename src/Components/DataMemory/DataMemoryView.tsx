@@ -1,16 +1,16 @@
-import { memo } from "react";
-import type { Data, DataMemory } from "../../Core/SmallCPU";
+import { memo, useEffect } from "react";
+import type { Data, StateSmallCPU } from "../../Core/SmallCPU";
 import styles from "./DataMemoryView.module.css"
 import { DataLine } from "../DataLine/DataLine";
 
 interface DataMemoryViewProps {
-    dataMemory : DataMemory,
+    cpuState: StateSmallCPU,
     handleDataMemoryUpdate : (updatedData : Data) => void,
 };
 
 export const DataMemoryView = memo (
     function DataMemoryView( {
-        dataMemory,
+        cpuState,
         handleDataMemoryUpdate
     } : DataMemoryViewProps ) {
 
@@ -26,7 +26,7 @@ export const DataMemoryView = memo (
                     <span>Data</span>
                 </div>
                 <div className={styles.body}>
-                {dataMemory.map((data) => (
+                {cpuState.dataMemory.map((data) => (
                     <DataLine
                         key={data.address}
                         data={data}

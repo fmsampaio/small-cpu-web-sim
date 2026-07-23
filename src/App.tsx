@@ -15,9 +15,9 @@ function App() {
   
   const [cpuState, setCpuState] = useState<StateSmallCPU>(cpu.exportState())
   
-  useEffect( () => {
-    console.log(cpuState.dataMemory);
-  }, [cpuState])
+  // useEffect( () => {
+  //   console.log(cpuState.dataMemory);
+  // }, [cpuState])
 
   function handleInstructionMemoryUpdate(instruction : Instruction) {
     cpu.updateInstruction(instruction);
@@ -30,13 +30,15 @@ function App() {
   }
 
   function handleMemoryUpdate(data : Data) {
-    cpu.updateData(data);
+    // cpu.updateData(data);
+    cpu.storeDataInMemory(data.address, data.data.content)
     setCpuState(cpu.exportState());
   }
 
   function handleStepBtn() {
     cpu.step();
     setCpuState(cpu.exportState());
+    console.log(cpu.dataMemory)
   }
 
   return (
@@ -47,7 +49,7 @@ function App() {
         handleInvalidInstructionMemoryUpdate={handleInvalidInstructionMemoryUpdate}
       />
       <DataMemoryView
-        dataMemory={cpuState.dataMemory}
+        cpuState={cpuState}
         handleDataMemoryUpdate={handleMemoryUpdate}
       />
       <div className={styles.side_container}>
