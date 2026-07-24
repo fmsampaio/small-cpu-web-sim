@@ -1,16 +1,18 @@
 import { memo } from "react";
-import type { StateSmallCPU } from "../../Core/SmallCPU";
+import type { RegisterName, StateSmallCPU } from "../../Core/SmallCPU";
 
 import styles from "./RegisterPanel.module.css"
 import { RegisterView } from "../RegisterView/RegisterView";
 
 interface RegisterPanelProps {
-    cpuState : StateSmallCPU
+    cpuState : StateSmallCPU,
+    regToBeHighlighted : string
 }
 
 export const RegisterPanel = memo (
     function RegisterPanel({
-        cpuState
+        cpuState,
+        regToBeHighlighted
     } : RegisterPanelProps) {
         return (
             <div className = {styles.container}>
@@ -18,10 +20,10 @@ export const RegisterPanel = memo (
                     <h2>Registers</h2>
                     <div className = {styles.internal_regs_container}>
                         <div className = {styles.internal_regs_line}>
-                            <RegisterView name="RA" data={cpuState.registerFile.RA} highlight={false}/>
-                            <RegisterView name="RB" data={cpuState.registerFile.RB} highlight={false}/>
-                            <RegisterView name="RC" data={cpuState.registerFile.RC} highlight={false}/>
-                            <RegisterView name="RX" data={cpuState.registerFile.RX} highlight={false}/>
+                            <RegisterView name="RA" data={cpuState.registerFile.RA} highlight={regToBeHighlighted == "RA"}/>
+                            <RegisterView name="RB" data={cpuState.registerFile.RB} highlight={regToBeHighlighted == "RB"}/>
+                            <RegisterView name="RC" data={cpuState.registerFile.RC} highlight={regToBeHighlighted == "RC"}/>
+                            <RegisterView name="RX" data={cpuState.registerFile.RX} highlight={regToBeHighlighted == "RX"}/>
                         </div>
                         <div className = {styles.internal_regs_line}>
                             <RegisterView name="PC" data={cpuState.pc} highlight={false}/>

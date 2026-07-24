@@ -592,5 +592,13 @@ export class SmallCPU {
     }
   }
 
-
+  getRegToBeHighlighted() : string {
+    const nextInstruction = this.instructionMemory[this.pc.content] as Instruction;
+    if("reg" in nextInstruction.fields) {
+      return nextInstruction.fields.reg as string;
+    }
+    else {
+      return "None";
+    }
+  }
 }

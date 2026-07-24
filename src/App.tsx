@@ -13,7 +13,8 @@ function App() {
     []
   );
   
-  const [cpuState, setCpuState] = useState<StateSmallCPU>(cpu.exportState())
+  const [cpuState, setCpuState] = useState<StateSmallCPU>(cpu.exportState());
+  const [regToBeHighlighted, setRegToBeHighlighted] = useState("None");
   
   // useEffect( () => {
   //   console.log(cpuState.dataMemory);
@@ -22,33 +23,42 @@ function App() {
   function handleInstructionMemoryUpdate(instruction : Instruction) {
     cpu.updateInstruction(instruction);
     setCpuState(cpu.exportState());
+    updateHighlights();
   }
 
   function handleMemoryUpdate(data : Data) {
     // cpu.updateData(data);
     cpu.storeDataInMemory(data.address, data.data.content)
     setCpuState(cpu.exportState());
+    updateHighlights();
   }
 
   function handleStepBtn() {
     cpu.step();
     setCpuState(cpu.exportState());
+    updateHighlights();
   }
 
   function handleRunBtn() {
     cpu.run();
     setCpuState(cpu.exportState());
+    updateHighlights();
   }
 
   function handleResetBtn() {
     cpu.resetRegisters();
     setCpuState(cpu.exportState());
+    updateHighlights();
   }
 
   function handleClearMemoriesBtn() {
     cpu.resetRegisters();
     cpu.resetMemories();
     setCpuState(cpu.exportState());
+  }
+
+  function updateHighlights() {
+    setRegToBeHighlighted(cpu.getRegToBeHighlighted());
   }
 
 
@@ -65,6 +75,7 @@ function App() {
       <div className={styles.side_container}>
         <RegisterPanel
           cpuState={cpuState} 
+          regToBeHighlighted={regToBeHighlighted}
         />
         <SimulationControl
           handleStepBtn={handleStepBtn}
