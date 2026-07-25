@@ -601,4 +601,17 @@ export class SmallCPU {
       return "None";
     }
   }
+
+  getDataToHighlight() : number {
+    const nextInstruction = this.instructionMemory[this.pc.content] as Instruction;
+    if("mode" in nextInstruction.fields) {
+        if(nextInstruction.fields.mode === "DIR") {
+          return nextInstruction.fields.mem!;
+        }
+        else if(nextInstruction.fields.mode === "IDX") {
+          return nextInstruction.fields.mem! + this.registerFile.RX.content;
+        }
+    }
+    return -1;
+  }
 }

@@ -4,13 +4,15 @@ import styles from "./DataLine.module.css"
 
 interface DataLineProps {
     data: Data,
-    handleDataUpdate: (updatedData : Data) => void
+    handleDataUpdate: (updatedData : Data) => void,
+    isHighlighted: boolean
 }
 
 export const DataLine = memo (
     function DataLine( {
         data, 
-        handleDataUpdate
+        handleDataUpdate,
+        isHighlighted
     } : DataLineProps) {
 
         const [dataInput, setDataInput] = useState(data.data.content.toString());
@@ -39,7 +41,7 @@ export const DataLine = memo (
         }
 
         return (
-            <div className={styles.row}>
+            <div className={`${isHighlighted ? styles.row_highlighted : styles.row}`}>
                 <span>{data.address}</span>
                 <input className={styles.dataInput}
                     onChange={handleOnChange}

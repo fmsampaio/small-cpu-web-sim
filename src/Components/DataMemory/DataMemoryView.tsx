@@ -6,12 +6,14 @@ import { DataLine } from "../DataLine/DataLine";
 interface DataMemoryViewProps {
     cpuState: StateSmallCPU,
     handleDataMemoryUpdate : (updatedData : Data) => void,
+    highlight : number,
 };
 
 export const DataMemoryView = memo (
     function DataMemoryView( {
         cpuState,
-        handleDataMemoryUpdate
+        handleDataMemoryUpdate,
+        highlight
     } : DataMemoryViewProps ) {
 
         function handleDataUpdate(updatedData : Data) : void {
@@ -31,6 +33,7 @@ export const DataMemoryView = memo (
                         key={data.address}
                         data={data}
                         handleDataUpdate={handleDataUpdate}
+                        isHighlighted={highlight === data.address}
                     />
                 ))}
                 </div>

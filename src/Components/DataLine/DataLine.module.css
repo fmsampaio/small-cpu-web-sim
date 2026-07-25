@@ -5,6 +5,15 @@
   min-height: 40px;
 }
 
+.row_highlighted {
+  display: grid;
+  grid-template-columns: 4rem 4rem;
+  align-items: center;
+  min-height: 40px;
+	/* border : 0.5px solid rgba(128, 0, 0, 0.575); */
+	background: rgba(168, 2, 2, 0.094);
+}
+
 .dataInput {
   width: 100%;
   max-width: 200px;

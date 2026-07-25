@@ -14,7 +14,8 @@ function App() {
   );
   
   const [cpuState, setCpuState] = useState<StateSmallCPU>(cpu.exportState());
-  const [regToBeHighlighted, setRegToBeHighlighted] = useState("None");
+  const [regToHighlight, setRegToHighlight] = useState("None");
+  const [dataToHighlight, setDataToHighlight] = useState(-1);
   
   // useEffect( () => {
   //   console.log(cpuState.dataMemory);
@@ -58,7 +59,8 @@ function App() {
   }
 
   function updateHighlights() {
-    setRegToBeHighlighted(cpu.getRegToBeHighlighted());
+    setRegToHighlight(cpu.getRegToBeHighlighted());
+    setDataToHighlight(cpu.getDataToHighlight());
   }
 
 
@@ -71,11 +73,12 @@ function App() {
       <DataMemoryView
         cpuState={cpuState}
         handleDataMemoryUpdate={handleMemoryUpdate}
+        highlight={dataToHighlight}
       />
       <div className={styles.side_container}>
         <RegisterPanel
           cpuState={cpuState} 
-          regToBeHighlighted={regToBeHighlighted}
+          regToBeHighlighted={regToHighlight}
         />
         <SimulationControl
           handleStepBtn={handleStepBtn}

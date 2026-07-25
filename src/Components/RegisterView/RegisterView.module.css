@@ -12,8 +12,8 @@
     margin: 5px 5px 5px 5px;
     width: 35px;
     align-items: center;
-	border : 0.5px solid rgba(128, 0, 0, 0.575);
-	background: rgba(168, 2, 2, 0.062);
+	/* border : 0.5px solid rgba(128, 0, 0, 0.575); */
+	background: rgba(168, 2, 2, 0.094);
 }
 
 h3 {
