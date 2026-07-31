@@ -5,14 +5,16 @@ import styles from "./InstructionLine.module.css"
 interface InstructionLineProps {
     pcIsHere: boolean,
     instruction: Instruction,
-    handleInstructionUpdate: (updatedInstruction: Instruction) => void
+    handleInstructionUpdate: (updatedInstruction: Instruction) => void,
+    highlight: boolean
 }
 
 export const InstructionLine = memo (
     function InstructionLine( {
         pcIsHere,
         instruction,
-        handleInstructionUpdate
+        handleInstructionUpdate,
+        highlight
     } : InstructionLineProps) {
 
         const [assemblyDataInput, setAssemblyDataInput] = useState(instruction.assembly);
@@ -38,7 +40,7 @@ export const InstructionLine = memo (
         }
 
         return ( 
-            <div className={styles.row}>
+            <div className={`${styles.row} ${pcIsHere ? styles.row_pc_highlight : (highlight ? styles.row_mem_highlight : "")}`}>
                 { pcIsHere ?
                     <span className={`${styles.tag} ${styles.pcIsHere}`}>
                         PC

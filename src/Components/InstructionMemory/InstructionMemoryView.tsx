@@ -8,12 +8,14 @@ import styles from "./InstructionMemoryView.module.css"
 interface InstructionMemoryViewProps {
     cpuState : StateSmallCPU,
     handleInstructionMemoryUpdate : (updatedInstruction : Instruction) => void,
+    highlight : number
 }
 
 export const InstructionMemoryView = memo( 
   function InstructionMemoryView( {
       cpuState,
       handleInstructionMemoryUpdate,
+      highlight
     } : InstructionMemoryViewProps ) {
 
     function handleInstructionUpdate( updatedInstruction : Instruction) : void {
@@ -37,6 +39,7 @@ export const InstructionMemoryView = memo(
               key={instruction.address}
               instruction={instruction}
               handleInstructionUpdate={handleInstructionUpdate}
+              highlight={highlight === instruction.address}
             />
           ))}
         </div>

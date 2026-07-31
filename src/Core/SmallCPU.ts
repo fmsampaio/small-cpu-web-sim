@@ -614,4 +614,13 @@ export class SmallCPU {
     }
     return -1;
   }
+
+  getInstToHighlight() : number {
+    const nextInstruction = this.instructionMemory[this.pc.content] as Instruction;
+    if(nextInstruction.fields.inst === "JMP" || nextInstruction.fields.inst === "JC") {
+      return nextInstruction.fields.mem!;
+    }
+    return -1;
+  }
 }
+

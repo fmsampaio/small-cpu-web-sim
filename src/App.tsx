@@ -16,6 +16,7 @@ function App() {
   const [cpuState, setCpuState] = useState<StateSmallCPU>(cpu.exportState());
   const [regToHighlight, setRegToHighlight] = useState("None");
   const [dataToHighlight, setDataToHighlight] = useState(-1);
+  const [instToHighlight, setInstToHighlight] = useState(-1);
   
   // useEffect( () => {
   //   console.log(cpuState.dataMemory);
@@ -61,6 +62,7 @@ function App() {
   function updateHighlights() {
     setRegToHighlight(cpu.getRegToBeHighlighted());
     setDataToHighlight(cpu.getDataToHighlight());
+    setInstToHighlight(cpu.getInstToHighlight());
   }
 
 
@@ -69,6 +71,7 @@ function App() {
       <InstructionMemoryView 
         cpuState={cpuState}
         handleInstructionMemoryUpdate={handleInstructionMemoryUpdate}
+        highlight={instToHighlight}
       />
       <DataMemoryView
         cpuState={cpuState}
