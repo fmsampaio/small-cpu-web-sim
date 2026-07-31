@@ -63,8 +63,8 @@ export const InstructionLine = memo (
                     onFocus={handleOnFocus}
                 />
 
-                <span className={`${styles.machineCode} ${(instruction.isValid || instruction.assembly !== "") ? styles.visible : ""}`}>
-                    {(instruction.isValid || instruction.assembly !== "") && instruction.hex}
+                <span className={`${styles.machineCode} ${(instruction.isValid) ? styles.visible : ""}`}>
+                    {(instruction.isValid) && instruction.hex}
                 </span>
 
                 { instruction.fields.mode === "DIR" ?

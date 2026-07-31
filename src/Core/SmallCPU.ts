@@ -425,6 +425,7 @@ export class SmallCPU {
   updateInstruction(instruction: Instruction): void {
     if(instruction.address >= 0 && instruction.address < 256) {
       this.instructionMemory[instruction.address] = instruction;
+      console.log(instruction);
     }
     else {
       throw new Error(`Endereço inválido: ${instruction.address}`);
