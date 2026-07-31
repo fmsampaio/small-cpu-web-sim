@@ -85,6 +85,11 @@ function App() {
       setAlertType("error");
       setAlertVisible(true);
     }
+    if(cpu.isInvalidInstruction) {
+      setAlertMessage("Invalid instruction to be executed! CPU Reseted!");
+      setAlertType("error");
+      setAlertVisible(true);
+    }
   }
 
   return (

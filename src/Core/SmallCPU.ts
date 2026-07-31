@@ -352,12 +352,11 @@ export class SmallCPU {
   instructionMemory!: InstructionMemory;
   pc!: UnsignedData;
   ri!: Instruction;
-  isHltReached: boolean;
-  isTimeoutReached: boolean;
+  isHltReached!: boolean;
+  isTimeoutReached!: boolean;
+  isInvalidInstruction!: boolean;
   
   constructor() {
-    this.isHltReached = false;
-    this.isTimeoutReached = false;
     this.resetMemories();
     this.resetRegisters();
   }
@@ -407,8 +406,13 @@ export class SmallCPU {
       }
     }
 
+    this.resetExecutionFlags();
+  }
+
+  resetExecutionFlags() {
     this.isHltReached = false;
     this.isTimeoutReached = false;
+    this.isInvalidInstruction = false;
   }
 
   storeDataInMemory(address : number, content : number) {
@@ -495,6 +499,11 @@ export class SmallCPU {
       return;
 
     this.ri = this.instructionMemory[this.pc.content];
+    this.isInvalidInstruction = ! this.ri.isValid;
+
+    if(this.isInvalidInstruction)
+      return;
+
     console.log(`[DBG] Executing instruction:`);
     console.log(this.ri);
     this.pc.add(1);
