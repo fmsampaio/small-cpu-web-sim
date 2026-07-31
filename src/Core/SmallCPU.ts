@@ -408,6 +408,7 @@ export class SmallCPU {
     }
 
     this.isHltReached = false;
+    this.isTimeoutReached = false;
   }
 
   storeDataInMemory(address : number, content : number) {

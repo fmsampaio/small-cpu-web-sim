@@ -6,6 +6,7 @@ import { DataMemoryView } from './Components/DataMemory/DataMemoryView';
 import styles from "./App.module.css"
 import { RegisterPanel } from './Components/RegisterPanel/RegisterPanel';
 import { SimulationControl } from './Components/SimulationControl/SimulationControl';
+import Alert from './Components/Alert/Alert';
 
 function App() {
   const cpu = useMemo(
@@ -17,6 +18,12 @@ function App() {
   const [regToHighlight, setRegToHighlight] = useState("None");
   const [dataToHighlight, setDataToHighlight] = useState(-1);
   const [instToHighlight, setInstToHighlight] = useState(-1);
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<"success" | "error">("success");
+
+
   
   // useEffect( () => {
   //   console.log(cpuState.dataMemory);
@@ -39,12 +46,14 @@ function App() {
     cpu.step();
     setCpuState(cpu.exportState());
     updateHighlights();
+    updateAlert();
   }
 
   function handleRunBtn() {
     cpu.run();
     setCpuState(cpu.exportState());
     updateHighlights();
+    updateAlert();
   }
 
   function handleResetBtn() {
@@ -65,6 +74,18 @@ function App() {
     setInstToHighlight(cpu.getInstToHighlight());
   }
 
+  function updateAlert() {
+    if(cpu.isHltReached) {
+      setAlertMessage("HLT is reached!");
+      setAlertType("success");
+      setAlertVisible(true);
+    }
+    if(cpu.isTimeoutReached) {
+      setAlertMessage("Timeout!");
+      setAlertType("error");
+      setAlertVisible(true);
+    }
+  }
 
   return (
     <main className={styles.main_container}>
@@ -89,7 +110,14 @@ function App() {
           handleRunBtn={handleRunBtn}
           handleClearMemoriesBtn={handleClearMemoriesBtn}
         />
+        <Alert
+          visible={alertVisible}
+          message={alertMessage}
+          type={alertType}
+          onClose={() => setAlertVisible(false)}
+        />
       </div>
+
     </main>
   )
 }
