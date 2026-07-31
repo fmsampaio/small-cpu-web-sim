@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { RegisterName, StateSmallCPU } from "../../Core/SmallCPU";
+import type { StateSmallCPU } from "../../Core/SmallCPU";
 
 import styles from "./RegisterPanel.module.css"
 import { RegisterView } from "../RegisterView/RegisterView";

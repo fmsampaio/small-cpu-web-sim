@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import type { Data, StateSmallCPU } from "../../Core/SmallCPU";
 import styles from "./DataMemoryView.module.css"
 import { DataLine } from "../DataLine/DataLine";

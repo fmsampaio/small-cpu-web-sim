@@ -6,10 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "start": "node server.cjs"
+  },
+  "engines": {
+    "node": "22.x",
+    "npm": "10.x"
   },
   "dependencies": {
+    "express": "^5.2.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

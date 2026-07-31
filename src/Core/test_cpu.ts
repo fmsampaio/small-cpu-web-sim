@@ -1,8 +1,8 @@
 import {UnsignedData, SignedData, SmallCPU, isValidAssembly} from "./SmallCPU.ts"
 
 function mainTest() {
-    // testAssemblyParsing();
-    // testDataFormats();
+    testAssemblyParsing();
+    testDataFormats();
     program1();
 }
 

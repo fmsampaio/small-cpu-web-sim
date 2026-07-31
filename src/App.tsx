@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { InstructionMemoryView } from './Components/InstructionMemory/InstructionMemoryView'
 import { type Data, type Instruction, type StateSmallCPU, SmallCPU } from './Core/SmallCPU'
 import { DataMemoryView } from './Components/DataMemory/DataMemoryView';
