@@ -7,6 +7,7 @@ import styles from "./App.module.css"
 import { RegisterPanel } from './Components/RegisterPanel/RegisterPanel';
 import { SimulationControl } from './Components/SimulationControl/SimulationControl';
 import Alert from './Components/Alert/Alert';
+import AboutPanel from './Components/AboutPanel/AboutPanel';
 
 function App() {
   const cpu = useMemo(
@@ -165,6 +166,7 @@ function App() {
           handleLoadMemoriesBtn={handleLoadMemoriesBtn}
           handleOnErrorFilePicker={handleOnErrorFilePicker}
         />
+        <AboutPanel />
         <Alert
           visible={alertVisible}
           message={alertMessage}

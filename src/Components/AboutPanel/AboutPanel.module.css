@@ -1,0 +1,43 @@
+.aboutPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    width: 100%;
+    padding: 1rem 0.25rem;
+
+    box-sizing: border-box;
+    color: #6b7280;
+    font-size: 0.8rem;
+
+    text-align: left;
+}
+
+.title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #4b5563;
+}
+
+.description {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.links a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
