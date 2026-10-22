@@ -129,6 +129,16 @@ function App() {
       URL.revokeObjectURL(url);
   }
 
+  function handleLoadMemoriesBtn(content: string) {
+    cpu.parseMemoryFile(content);
+    setCpuState(cpu.exportState());
+  }
+  function handleOnErrorFilePicker(message: string) {
+    setAlertMessage(message);
+    setAlertType("error");
+    setAlertVisible(true);
+  }
+
   return (
     <main className={styles.main_container}>
       <InstructionMemoryView 
@@ -152,6 +162,8 @@ function App() {
           handleRunBtn={handleRunBtn}
           handleClearMemoriesBtn={handleClearMemoriesBtn}
           handleSaveMemoriesBtn={handleSaveMemoriesBtn}
+          handleLoadMemoriesBtn={handleLoadMemoriesBtn}
+          handleOnErrorFilePicker={handleOnErrorFilePicker}
         />
         <Alert
           visible={alertVisible}

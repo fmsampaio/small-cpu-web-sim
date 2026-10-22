@@ -633,5 +633,87 @@ export class SmallCPU {
     }
     return -1;
   }
+
+  parseMemoryFile( content: string ) {
+
+    this.resetExecutionFlags();
+    this.resetRegisters();
+
+    const instructionCount = 256;
+    const dataCount = 256;
+    const bitWidth = 8;
+
+    const lines = content
+        .replace(/^\uFEFF/, "")
+        .split(/\r?\n/);
+
+    // Remove apenas linhas vazias finais
+    while (lines.at(-1) === "") {
+        lines.pop();
+    }
+
+    if (lines.length !== instructionCount + dataCount) {
+        throw new Error(
+            `Arquivo inválido: esperadas ${
+                instructionCount + dataCount
+            } linhas, encontradas ${lines.length}.`
+        );
+    }
+
+    function readLine(index: number, expectedAddress: number): string {
+        const line = lines[index];
+        const separator = line.indexOf(":");
+        if (separator < 0) {
+            throw new Error(`Linha ${index + 1}: separador ':' ausente.`);
+        }
+        const address = Number(line.slice(0, separator).trim());
+        if (!Number.isInteger(address) || address !== expectedAddress) {
+            throw new Error(
+                `Linha ${index + 1}: endereço inválido. ` +
+                `Esperado: ${expectedAddress}.`
+            );
+        }
+        return line.slice(separator + 1).trim();
+    }
+
+    const instructionMemory: InstructionMemory = [];
+
+    for (let i = 0; i < instructionCount; i++) {
+        const assembly = readLine(i, i);
+
+        instructionMemory.push(
+            parseAssembly(i, assembly)
+        );
+    }
+
+    const dataMemory: DataMemory = [];
+
+    for (let i = 0; i < dataCount; i++) {
+        const value = readLine(instructionCount + i, i);
+
+        if (!/^[+-]?\d+$/.test(value)) {
+            throw new Error(
+                `Linha ${instructionCount + i + 1}: valor numérico inválido.`
+            );
+        }
+
+        const number = Number(value);
+
+        if (!Number.isSafeInteger(number)) {
+            throw new Error(
+                `Linha ${instructionCount + i + 1}: número fora do intervalo válido.`
+            );
+        }
+
+        dataMemory.push({
+            address: i,
+            data: new SignedData(number, bitWidth)
+        });
+    }
+
+    this.instructionMemory = instructionMemory;
+    this.dataMemory = dataMemory;
+
+  }
 }
 

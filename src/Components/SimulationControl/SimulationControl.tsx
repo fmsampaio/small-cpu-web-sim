@@ -1,6 +1,7 @@
 import { memo } from "react";
 
 import styles from "./SimulationControl.module.css"
+import MemFilePicker from "../MemFilePicker/MemFilePicker";
 
 interface SimulationControlProps {
     handleStepBtn : () => void,
@@ -8,6 +9,8 @@ interface SimulationControlProps {
     handleRunBtn : () => void,
     handleClearMemoriesBtn : () => void,
     handleSaveMemoriesBtn: () => void,
+    handleLoadMemoriesBtn: (content: string) => void | Promise<void>,
+    handleOnErrorFilePicker: (message: string) => void
 }
 
 export const SimulationControl = memo (
@@ -16,7 +19,9 @@ export const SimulationControl = memo (
         handleResetBtn,
         handleRunBtn,
         handleClearMemoriesBtn,
-        handleSaveMemoriesBtn
+        handleSaveMemoriesBtn,
+        handleLoadMemoriesBtn,
+        handleOnErrorFilePicker
     } : SimulationControlProps) {
         return (
             <div className={styles.container}>
@@ -53,11 +58,12 @@ export const SimulationControl = memo (
                         >
                             Reset
                         </button>
-                        <button
-                            className={styles.button_4}
-                        >
-                            Select File
-                        </button>
+                        <MemFilePicker
+                            onLoad={handleLoadMemoriesBtn}
+                            onError={message => {
+                                handleOnErrorFilePicker(message);
+                            }}
+                        />
                     </div>
                 </div>
             </div>
