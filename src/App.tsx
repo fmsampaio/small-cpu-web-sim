@@ -92,6 +92,43 @@ function App() {
     }
   }
 
+  function handleSaveMemoriesBtn() {
+      const lines: string[] = [];
+
+      // Memória de instruções
+      cpuState.instructionMemory.forEach(instruction => {
+          lines.push(
+              `${instruction.address}:${instruction.assembly}`
+          );
+      });
+
+      // Memória de dados
+      cpuState.dataMemory.forEach(data => {
+          lines.push(
+              `${data.address}:${data.data.content}`
+          );
+      });
+
+      const fileContent = lines.join("\n") + "\n";
+
+      const blob = new Blob(
+          [fileContent],
+          { type: "text/plain;charset=utf-8" }
+      );
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "mem_content.mem";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+  }
+
   return (
     <main className={styles.main_container}>
       <InstructionMemoryView 
@@ -114,6 +151,7 @@ function App() {
           handleResetBtn={handleResetBtn}
           handleRunBtn={handleRunBtn}
           handleClearMemoriesBtn={handleClearMemoriesBtn}
+          handleSaveMemoriesBtn={handleSaveMemoriesBtn}
         />
         <Alert
           visible={alertVisible}
