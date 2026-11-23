@@ -17,9 +17,11 @@
 
   font: 15px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
+  /* color: var(--text); */
+  /* background: var(--bg); */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
